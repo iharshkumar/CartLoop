@@ -77,7 +77,7 @@ const Header = () => {
     return (
         <>
             <header className={`w-full !h-[auto] !py-2 ${context.isSidebarOpen === true ? 'pl-66' : 'pl-0'} !shadow-md 
-        !pr-7 !bg-[#fff] flex items-center justify-between transition-all`}>
+        !pr-7 !bg-[#fff] flex items-center justify-between transition-all fixed !top-0 !left-0 !z-50`}>
                 <div className='part1 !pl-6'>
                     <Button className='!w-[40px] !h-[40px] !rounded-full !min-w-[40px] !text-[rgba(0,0,0,0.8)] '
                         onClick={() => context.setisSidebarOpen(!context.isSidebarOpen)}>

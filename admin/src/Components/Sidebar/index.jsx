@@ -28,7 +28,7 @@ const Sidebar = () => {
 
     return (
         <>
-            <div className={`sidebar !fixed !top-0 !left-0 !bg-white h-full 
+            <div className={`sidebar !fixed !top-0 !left-0 !z-[50] !bg-white h-full 
     !border-r !border-[rgba(0,0,0,0.1)] !py-1 !px-5 sidebarWrapper w-[${context.isSidebarOpen === true ? '18%' : '0px'}]`}>
                 <div className='!py-2 w-full'>
                     <Link to="/">
@@ -127,13 +127,13 @@ const Sidebar = () => {
                                             <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Sub Category List
                                         </Button>
                                     </Link>
-                                        <Button className='!text-[rgba(0,0,0,0.7)] !capitalise !pl-8 !justify-start !w-full !text-[13px] !font-[500] gap-3'
+                                    <Button className='!text-[rgba(0,0,0,0.7)] !capitalise !pl-8 !justify-start !w-full !text-[13px] !font-[500] gap-3'
                                         onClick={() => context.setIsOpenFullScreenPanel({
                                             open: true,
                                             model: 'Add New Sub Category'
                                         })}>
-                                            <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Add a sub category
-                                        </Button>
+                                        <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Add a sub category
+                                    </Button>
                                 </li>
                             </ul>
                         </Collapse>
@@ -171,6 +171,15 @@ const Sidebar = () => {
 
 
                                 </li>
+
+
+                                <li className='w-full'>
+                                    <Link to="/products/addRAMS">
+                                        <Button className='!text-[rgba(0,0,0,0.7)] !capitalise !pl-8 !justify-start !w-full !text-[13px] !font-[500] gap-3'>
+                                            <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Add Product RAM
+                                        </Button>
+                                    </Link>
+                                </li> 
                             </ul>
                         </Collapse>
 

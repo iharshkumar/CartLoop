@@ -20,6 +20,7 @@ import { MyContext } from '../../App';
 import { deleteData, deleteMultipleData, fetchDataFromApi } from '../../utils/api';
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import 'react-lazy-load-image-component/src/effects/blur.css'
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 
@@ -56,6 +57,7 @@ const Products = () => {
     const [productThirdLevelCat, setProductThirdLevelCat] = useState('');
     const context = useContext(MyContext)
     const [sortedIds, setSortedIds] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
 
 
     useEffect(() => {
@@ -93,17 +95,24 @@ const Products = () => {
     };
 
     const getProducts = async () => {
-        fetchDataFromApi("/api/product/getAllProducts").then((res) => {
-            let productArr = [];
-            if (res?.error === false) {
-                for (let i = 0; i < res?.data?.length; i++) {
-                    productArr[i] = res?.data[i];
-                    productArr[i].checked = false;
+        setIsLoading(true);
+        fetchDataFromApi("/api/product/getAllProducts")
+            .then((res) => {
+                let productArr = [];
+                if (res?.error === false) {
+                    for (let i = 0; i < res?.data?.length; i++) {
+                        productArr[i] = res?.data[i];
+                        productArr[i].checked = false;
+                    }
+                    setTimeout(() => {
+                        setProductData(productArr);
+                        // console.log(productArr) 
+                    }, 500);
                 }
-                setProductData(productArr)
-                // console.log(productArr)
-            }
-        })
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
     }
 
 
@@ -117,12 +126,17 @@ const Products = () => {
 
     const handleChangeProductCat = (event) => {
         setProductCat(event.target.value);
-
+        setProductSubCat('');
+        setProductThirdLevelCat('');
+        setIsLoading(true)
         fetchDataFromApi(`/api/product/getAllProductsByCatId/${event.target.value}`).then((res) => {
             if (res?.error === false) {
                 setProductData(res?.data)
             }
         })
+            .finally(() => {
+                setIsLoading(false);
+            });
     };
     // const selectCatByName = (name) => {
     //     formFields.catName = name;
@@ -130,26 +144,39 @@ const Products = () => {
 
     const handleChangeProductSubCat = (event) => {
         setProductSubCat(event.target.value);
+        setProductCat('');
+        setProductThirdLevelCat('');
+        setIsLoading(true)
         fetchDataFromApi(`/api/product/getAllProductsBySubCatId/${event.target.value}`).then((res) => {
             if (res?.error === false) {
                 setProductData(res?.data)
             }
         })
+            .finally(() => {
+                setIsLoading(false);
+            });
     };
     // const selectSubCatByName = (name) => {
     //     formFields.subCat = name;
     //   }
     const handleChangeProductThirdLevelCat = (event) => {
         setProductThirdLevelCat(event.target.value);
+        setProductSubCat('');
+        setProductCat('');
+        setIsLoading(true)
         fetchDataFromApi(`/api/product/getAllProductsByThirdLevelCat/${event.target.value}`).then((res) => {
             if (res?.error === false) {
                 setProductData(res?.data)
             }
         })
+            .finally(() => {
+                setIsLoading(false);
+            });
     };
     // const selectSubCatThirdLevel = (name) => {
     //     formFields.thirdsubCat = name;
     //   }    
+
 
 
     const deleteProduct = (id) => {
@@ -350,99 +377,111 @@ const Products = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
+
+
                             {
-                                productData?.length !== 0 && productData
-                                    ?.slice(
-                                        page * rowsPerPage,
-                                        page * rowsPerPage + rowsPerPage
-                                    )?.map((product, index) => {
-                                        return (
-                                            <TableRow key={product?._id || index}>
-                                                <TableCell style={{ minWidth: columns.minWidth }}>
-                                                    <Checkbox size='small'
-                                                        checked={product.checked === true ? true : false}
-                                                        onChange={(e) => handleCheckboxChange(e, product._id, index)} />
-                                                </TableCell>
+                                isLoading === false ? productData?.length !== 0 && productData?.slice(
+                                    page * rowsPerPage,
+                                    page * rowsPerPage + rowsPerPage
+                                )?.map((product, index) => {
+                                    return (
+                                        <TableRow key={product?._id || index}>
+                                            <TableCell style={{ minWidth: columns.minWidth }}>
+                                                <Checkbox size='small'
+                                                    checked={product.checked === true ? true : false}
+                                                    onChange={(e) => handleCheckboxChange(e, product._id, index)} />
+                                            </TableCell>
 
-                                                <TableCell style={{ minWidth: columns.minWidth }}>
-                                                    <div className='flex items-center gap-4 w-[300px]'>
-                                                        <div className='img !w-[65px] !h-[65px] !rounded-md !overflow-hidden group'>
-                                                            <Link to={`/product/${product?._id}`}>
-                                                                <LazyLoadImage
-                                                                    alt={product?.name}
-                                                                    effect='blur'
-                                                                    className='w-full group-hover:scale-105 transition-all'
-                                                                    src={product?.images?.[0]}
-                                                                />
-                                                            </Link>
-                                                        </div>
-
-                                                        <div className='info w-[75%]'>
-                                                            <h3 className='font-[600] text-[14px] leading-4 hover:text-blue-500 '>
-                                                                <Link to={`/product/${product?._id}`}>
-                                                                    {product?.name}                                                            </Link>
-                                                            </h3>
-                                                            <span className='text-[12px]'>
-                                                                {product?.brand}
-                                                            </span>
-                                                        </div>
-
-                                                    </div>
-                                                </TableCell>
-
-                                                <TableCell style={{ minWidth: columns.minWidth }}>
-                                                    {product?.catName}
-                                                </TableCell>
-
-                                                <TableCell style={{ minWidth: columns.minWidth }}>
-                                                    {product?.subCat}
-                                                </TableCell>
-
-                                                <TableCell style={{ minWidth: columns.minWidth }}>
-                                                    <div className='flex gap-1 flex-col'>
-                                                        <span className='oldPrice line-through leading-3 text-gray-500 text-[15px] font-[500]'>
-                                                            &#8377; {product?.oldPrice}</span>
-                                                        <span className='price text-blue-500 text-[15px] font-[600]'>
-                                                            &#8377; {product?.price}</span>
-                                                    </div>
-                                                </TableCell>
-
-                                                <TableCell style={{ minWidth: columns.minWidth }}>
-                                                    <p className='text-[14px] w-[100px]'>
-                                                        <span className='font-[600]'>
-                                                            {product?.sale}
-                                                        </span>
-                                                        sale
-                                                    </p>
-                                                </TableCell>
-
-                                                <TableCell style={{ minWidth: columns.minWidth }}>
-                                                    <div className='flex items-center gap-1'>
-                                                        <Button className='!w-[35px] !h-[35px] !min-w-[35px] bg-[#f1f1f1] !border !border-[rgba(0,0,0,0.4)] !rounded-full hover:!bg-[#f1f1f1]'
-                                                            onClick={() => context.setIsOpenFullScreenPanel({
-                                                                open: true,
-                                                                model: 'Edit Product',
-                                                                id: product?._id
-                                                            })}>
-                                                            <MdOutlineModeEdit className='text-[rgba(0,0,0,0.7)] text-[20px] ' />
-                                                        </Button>
-
+                                            <TableCell style={{ minWidth: columns.minWidth }}>
+                                                <div className='flex items-center gap-4 w-[300px]'>
+                                                    <div className='img !w-[65px] !h-[65px] !rounded-md !overflow-hidden group'>
                                                         <Link to={`/products/${product?._id}`}>
-                                                            <Button className='!w-[35px] !h-[35px] !min-w-[35px] bg-[#f1f1f1] !border !border-[rgba(0,0,0,0.4)] !rounded-full hover:!bg-[#f1f1f1]'>
-                                                                <FiEye className='text-[rgba(0,0,0,0.7)] text-[20px] ' />
-                                                            </Button>
+                                                            <LazyLoadImage
+                                                                alt={product?.name}
+                                                                effect='blur'
+                                                                className='w-full group-hover:scale-105 transition-all'
+                                                                src={product?.images?.[0]}
+                                                            />
                                                         </Link>
-
-                                                        <Button className='!w-[35px] !h-[35px] !min-w-[35px] bg-[#f1f1f1] !border !border-[rgba(0,0,0,0.4)] !rounded-full hover:!bg-[#f1f1f1]'
-                                                            onClick={() => { deleteProduct(product?._id) }}>
-                                                            <GoTrash className='text-[rgba(0,0,0,0.7)] text-[20px] ' />
-                                                        </Button>
                                                     </div>
-                                                </TableCell>
-                                            </TableRow>
 
-                                        )
-                                    })
+                                                    <div className='info w-[75%]'>
+                                                        <h3 className='font-[600] text-[14px] leading-4 hover:text-blue-500 '>
+                                                            <Link to={`/products/${product?._id}`}>
+                                                                {product?.name}                                                            </Link>
+                                                        </h3>
+                                                        <span className='text-[12px]'>
+                                                            {product?.brand}
+                                                        </span>
+                                                    </div>
+
+                                                </div>
+                                            </TableCell>
+
+                                            <TableCell style={{ minWidth: columns.minWidth }}>
+                                                {product?.catName}
+                                            </TableCell>
+
+                                            <TableCell style={{ minWidth: columns.minWidth }}>
+                                                {product?.subCat}
+                                            </TableCell>
+
+                                            <TableCell style={{ minWidth: columns.minWidth }}>
+                                                <div className='flex gap-1 flex-col'>
+                                                    <span className='oldPrice line-through leading-3 text-gray-500 text-[15px] font-[500]'>
+                                                        &#8377; {product?.oldPrice}</span>
+                                                    <span className='price text-blue-500 text-[15px] font-[600]'>
+                                                        &#8377; {product?.price}</span>
+                                                </div>
+                                            </TableCell>
+
+                                            <TableCell style={{ minWidth: columns.minWidth }}>
+                                                <p className='text-[14px] w-[100px]'>
+                                                    <span className='font-[600]'>
+                                                        {product?.sale}
+                                                    </span>
+                                                    sale
+                                                </p>
+                                            </TableCell>
+
+                                            <TableCell style={{ minWidth: columns.minWidth }}>
+                                                <div className='flex items-center gap-1'>
+                                                    <Button className='!w-[35px] !h-[35px] !min-w-[35px] bg-[#f1f1f1] !border !border-[rgba(0,0,0,0.4)] !rounded-full hover:!bg-[#f1f1f1]'
+                                                        onClick={() => context.setIsOpenFullScreenPanel({
+                                                            open: true,
+                                                            model: 'Edit Product',
+                                                            id: product?._id
+                                                        })}>
+                                                        <MdOutlineModeEdit className='text-[rgba(0,0,0,0.7)] text-[20px] ' />
+                                                    </Button>
+
+                                                    <Link to={`/products/${product?._id}`}>
+                                                        <Button className='!w-[35px] !h-[35px] !min-w-[35px] bg-[#f1f1f1] !border !border-[rgba(0,0,0,0.4)] !rounded-full hover:!bg-[#f1f1f1]'>
+                                                            <FiEye className='text-[rgba(0,0,0,0.7)] text-[20px] ' />
+                                                        </Button>
+                                                    </Link>
+
+                                                    <Button className='!w-[35px] !h-[35px] !min-w-[35px] bg-[#f1f1f1] !border !border-[rgba(0,0,0,0.4)] !rounded-full hover:!bg-[#f1f1f1]'
+                                                        onClick={() => { deleteProduct(product?._id) }}>
+                                                        <GoTrash className='text-[rgba(0,0,0,0.7)] text-[20px] ' />
+                                                    </Button>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+
+                                    )
+                                })
+
+                                    :
+                                    <>
+                                        <TableRow>
+                                            <TableCell colSpan={10}>
+                                                <div className='flex items-center justify-center w-full !min-h-[400px]'>
+                                                    <CircularProgress color="inherit" />
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    </>
                             }
                         </TableBody>
                     </Table>
@@ -457,7 +496,7 @@ const Products = () => {
                     onRowsPerPageChange={handleChangeRowsPerPage}
                 />
 
-            </div>
+            </div >
         </>
     )
 }
