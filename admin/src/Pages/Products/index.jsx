@@ -56,7 +56,6 @@ const columns =
 const Products = () => {
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [page, setPage] = useState(0);
-    //const [categoryFilterVal, setcategoryFilterVal] = React.useState('');
     const [productData, setProductData] = useState([])
     const [productCat, setProductCat] = useState('');
     const [productSubCat, setProductSubCat] = useState('')

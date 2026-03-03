@@ -77,7 +77,7 @@ const Dashboard = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const [categoryFilterVal, setcategoryFilterVal] = React.useState('');
+  //const [categoryFilterVal, setcategoryFilterVal] = React.useState('');
 
   const [chart1Data, setChart1Data] = useState([
     {
@@ -154,9 +154,9 @@ const Dashboard = () => {
     }
   ]);
 
-  const handleChangeCatFilter = (event) => {
-    setcategoryFilterVal(event.target.value);
-  };
+  // const handleChangeCatFilter = (event) => {
+  //   setcategoryFilterVal(event.target.value);
+  // };
 
 
   const handleChangePage = (event, newPage) => {
@@ -256,6 +256,19 @@ const Dashboard = () => {
       setSortedIds([]);
     }
   }
+
+  const handleCheckboxChange = (e, id, index) => {
+    const updatedItems = productData.map((item) =>
+      item._id === id ? { ...item, checked: !item.checked } : item
+    );
+    setProductData(updatedItems);
+
+    const selectedIds = updatedItems
+      .filter((item) => item.checked)
+      .map((item) => item._id)
+      .sort((a, b) => a - b);
+    setSortedIds(selectedIds);
+  };
 
 
 
@@ -1133,7 +1146,8 @@ const Dashboard = () => {
                           <div className='info w-[75%]'>
                             <h3 className='font-[600] text-[14px] leading-4 hover:text-blue-500 '>
                               <Link to={`/products/${product?._id}`}>
-                                {product?.name}                                                            </Link>
+                                {product?.name}
+                              </Link>
                             </h3>
                             <span className='text-[12px]'>
                               {product?.brand}

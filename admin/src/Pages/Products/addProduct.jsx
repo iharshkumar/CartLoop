@@ -297,8 +297,7 @@ const AddProduct = () => {
               <h3 className='text-[14px] font-[500] !mb-1'>Product Name</h3>
               <input
                 type="text"
-                className='w-full h-[40px] border border-[rgba(0,0,0,0.2)]
-          !focus:outline-none !focus:border-[rgba(0,0,0,0.4)] !rounded-sm !p-3 !text-sm !bg-[#fafafa]'
+                className='w-full h-[40px] border border-[rgba(0,0,0,0.2)] !focus:outline-none !focus:border-[rgba(0,0,0,0.4)] !rounded-sm !p-3 !text-sm !bg-[#fafafa]'
                 name="name"
                 value={formFields.name}
                 onChange={onChangeInput}
@@ -312,8 +311,7 @@ const AddProduct = () => {
               <h3 className='text-[14px] font-[500] !mb-1'>Product Description</h3>
               <textarea
                 type="text"
-                className='w-full h-[140px] border border-[rgba(0,0,0,0.2)]
-          !focus:outline-none !focus:border-[rgba(0,0,0,0.4)] !rounded-sm !p-3 !text-sm !bg-[#fff]'
+                className='w-full h-[140px] border border-[rgba(0,0,0,0.2)] !focus:outline-none !focus:border-[rgba(0,0,0,0.4)] !rounded-sm !p-3 !text-sm !bg-[#fff]'
                 name="description"
                 value={formFields.description}
                 onChange={onChangeInput} />
@@ -427,8 +425,7 @@ const AddProduct = () => {
               <h3 className='text-[14px] font-[500] !mb-1 !text-black'>Price</h3>
               <input
                 type="number"
-                className='w-full h-[40px] border border-[rgba(0,0,0,0.2)]
-          !focus:outline-none !focus:border-[rgba(0,0,0,0.4)] !rounded-sm !p-3 !text-sm !bg-[#fff]'
+                className='w-full h-[40px] border border-[rgba(0,0,0,0.2)] !focus:outline-none !focus:border-[rgba(0,0,0,0.4)] !rounded-sm !p-3 !text-sm !bg-[#fff]'
                 name="price"
                 value={formFields.price}
                 onChange={onChangeInput} />
