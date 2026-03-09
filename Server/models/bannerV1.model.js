@@ -13,13 +13,11 @@ const bannerV1Schema = new mongoose.Schema({
     ],
     catId: {
         type: String,
-        default: '',
-        required: true
+        default: ''
     },
     subCatId: {
         type: String,
         default: '',
-        required: true
     },
     thirdsubCatId: {
         type: String,
@@ -30,6 +28,10 @@ const bannerV1Schema = new mongoose.Schema({
         type: Number,
         required: true
     },
+    alignInfo: {
+        type: String,
+        required: true
+    }
 },
     { timestamps: true }
 )
