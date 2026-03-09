@@ -28,6 +28,11 @@ const Home = () => {
   const [popularProductData, setPopularProductData] = useState([]);
   const [allProductsData, setAllProductsData] = useState([]);
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [bannerV1Data, setBannerV1Data] = useState([]);
+  const [bannerV2Data, setBannerV2Data] = useState([]);
+  const [adsBannerV1Data, setAdsBannerV1Data] = useState([]);
+  const [adsBannerV2Data, setAdsBannerV2Data] = useState([]);
+  const [blogData, setBlogData] = useState([]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -43,7 +48,27 @@ const Home = () => {
     fetchDataFromApi("/api/product/getAllFeaturedProducts").then((res) => {
       setFeaturedProducts(res?.products)
     })
-
+    fetchDataFromApi("/api/bannerV1").then((res) => {
+      setBannerV1Data(res?.data);
+    })
+    fetchDataFromApi("/api/bannerV2").then((res) => {
+      if (res?.error === false) {
+        setBannerV2Data(res?.data || []);
+      }
+    })
+    fetchDataFromApi("/api/blog").then((res) => {
+      setBlogData(res?.data);
+    })
+    fetchDataFromApi("/api/adsBannerV1").then((res) => {
+      if (res?.error === false) {
+        setAdsBannerV1Data(res?.data || []);
+      }
+    })
+    fetchDataFromApi("/api/adsBannerV2").then((res) => {
+      if (res?.error === false) {
+        setAdsBannerV2Data(res?.data || []);
+      }
+    })
 
   }, []);
 
@@ -133,25 +158,38 @@ const Home = () => {
           </div>
 
           <div className='part2 w-[30%] pl-5 flex items-center gap-5 justify-between flex-col '>
-            <BannerBoxV2
-              info="Left"
-              image={'https://serviceapi.spicezgold.com/download/1757183705017_1737020250515_New_Project_47.jpg'}
-              title="Iphone 16 Pro Max"
-              subtitle="Apple"
-              price="$169.00"
-              linkText="SHOP NOW"
-              linkTo="/"
-            />
+            {
+              bannerV2Data?.length !== 0 && (() => {
+                const leftBanner = bannerV2Data.find(b => b.alignInfo === 'left');
+                const rightBanner = bannerV2Data.find(b => b.alignInfo === 'right');
 
-            <BannerBoxV2
-              info="right"
-              image={'https://serviceapi.spicezgold.com/download/1760160666204_1737020916820_New_Project_52.jpg'}
-              title="Summer Collection"
-              subtitle="Nike"
-              price="$89.99"
-              linkText="EXPLORE"
-              linkTo="/products"
-            />
+                return (
+                  <>
+                    <div className="z-10 flex gap-4">
+  {leftBanner && (
+    <BannerBoxV2
+      info="left"
+      image={leftBanner?.images?.[0]}
+      item={leftBanner}
+      linkText="SHOP NOW"
+      linkTo="/products"
+    />
+  )}
+
+  {rightBanner && (
+    <BannerBoxV2
+      info="right"
+      image={rightBanner?.images?.[0]}
+      item={rightBanner}
+      linkText="EXPLORE"
+      linkTo="/products"
+    />
+  )}
+</div>
+                  </>
+                );
+              })()
+            }
           </div>
 
         </div>
@@ -178,12 +216,15 @@ const Home = () => {
 
           </div>
 
-          <AdsBannerSliderV2 items={4} />
+          {
+            bannerV1Data?.length !== 0 && <AdsBannerSliderV2 items={4} data={bannerV1Data} />
+          }
+
 
         </div>
       </section>
 
-      <section className='bg-white pt-12 md:pt-16 pb-8 md:pb-12'>
+      <section className='bg-white pt-12 md:pt-16 pb-8 md:pb-12 !mb-0'>
         <div className='container bg-white flex flex-col gap-6'>
           <h2 className='text-[20px] font-[600]' style={{ paddingTop: '30px' }}>Latest Products </h2>
           <div className='flex flex-col gap-6'>
@@ -196,7 +237,11 @@ const Home = () => {
               allProductsData?.length !== 0 && <ProductsSlider items={6} data={allProductsData} />
             }
 
-            <AdsBannerSlider items={3} />
+            {
+              adsBannerV1Data?.length !== 0 && (
+                <AdsBannerSlider items={3} data={adsBannerV1Data} />
+              )
+            }
           </div>
         </div>
       </section>
@@ -213,55 +258,47 @@ const Home = () => {
             {
               featuredProducts?.length !== 0 && <ProductsSlider items={6} data={featuredProducts} />
             }
-            <AdsBannerSlider items={3} />
+            {
+              adsBannerV2Data?.length !== 0 && (
+                <AdsBannerSlider items={3} data={adsBannerV2Data} />
+              )
+            }
           </div>
         </div>
       </section>
 
-      <section className='pt-12 md:pt-16 pb-16 md:pb-20 w-full bg-white blogSection'>
-        <div className='container'>
-          <h2 className="text-[20px] font-[600] mb-6" style={{ paddingTop: '30px' }}>From the Blogs</h2>
-          <Swiper
-            slidesPerView={4}
-            spaceBetween={30}
-            navigation={true}
-            modules={[Navigation]}
-            className="blogSlider"
-            breakpoints={{
-              320: { slidesPerView: 1, spaceBetween: 15 },
-              640: { slidesPerView: 2, spaceBetween: 20 },
-              768: { slidesPerView: 3, spaceBetween: 25 },
-              1024: { slidesPerView: 4, spaceBetween: 30 }
-            }}
-          >
-            <SwiperSlide>
-              <BlogItem />
-            </SwiperSlide>
+      {
+        blogData?.length !== 0 &&
+        <section className='pt-12 md:pt-16 pb-16 md:pb-20 w-full bg-white blogSection'>
+          <div className='container'>
+            <h2 className="text-[20px] font-[600] mb-6" style={{ paddingTop: '30px' }}>From the Blogs</h2>
+            <Swiper
+              slidesPerView={4}
+              spaceBetween={30}
+              navigation={true}
+              modules={[Navigation]}
+              className="blogSlider"
+              breakpoints={{
+                320: { slidesPerView: 1, spaceBetween: 15 },
+                640: { slidesPerView: 2, spaceBetween: 20 },
+                768: { slidesPerView: 3, spaceBetween: 25 },
+                1024: { slidesPerView: 4, spaceBetween: 30 }
+              }}
+            >
+              {
+                blogData?.map((item, index) => {
+                  return (
+                    <SwiperSlide key={index}>
+                      <BlogItem item={item} />
+                    </SwiperSlide>
+                  )
+                })
+              }
+            </Swiper>
+          </div>
+        </section>
+      }
 
-            <SwiperSlide>
-              <BlogItem />
-            </SwiperSlide>
-
-            <SwiperSlide>
-              <BlogItem />
-            </SwiperSlide>
-
-            <SwiperSlide>
-              <BlogItem />
-            </SwiperSlide>
-
-            <SwiperSlide>
-              <BlogItem />
-            </SwiperSlide>
-
-            <SwiperSlide>
-              <BlogItem />
-            </SwiperSlide>
-
-          </Swiper>
-        </div>
-
-      </section>
 
 
     </>

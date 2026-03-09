@@ -179,7 +179,7 @@ const Sidebar = () => {
                                             <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Add Product RAM
                                         </Button>
                                     </Link>
-                                </li> 
+                                </li>
 
 
                                 <li className='w-full'>
@@ -188,7 +188,7 @@ const Sidebar = () => {
                                             <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Add Product WEIGHT
                                         </Button>
                                     </Link>
-                                </li> 
+                                </li>
 
                                 <li className='w-full'>
                                     <Link to="/products/addSize">
@@ -196,7 +196,7 @@ const Sidebar = () => {
                                             <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Add Product SIZE
                                         </Button>
                                     </Link>
-                                </li> 
+                                </li>
                             </ul>
                         </Collapse>
 
@@ -210,6 +210,141 @@ const Sidebar = () => {
                                 <span>Orders</span>
                             </Button>
                         </Link>
+                    </li>
+
+
+                    <li>
+                        <Link to="/">
+                            <Button className='w-full !capitalise !justify-start flex gap-3 text-[14px] !font-[500] !text-[rgba(0,0,0,0.8)] items-center !py-2 !hover:bg-[#f1f1f1]'
+                                onClick={() => isOpenSubMenu(5)}
+                            >
+                                <IoCartOutline className='text-[20px]' />
+                                <span>Banners</span>
+                                <span className='!ml-auto !w-[30px] !h-[30px] flex items-center justfy-center'>
+                                    <FaAngleDown className={`transition-all ${subMenuIndex === 5 ? 'rotate-180' : ''}`} />
+                                </span>
+                            </Button>
+                        </Link>
+
+                        <Collapse isOpened={subMenuIndex === 5 ? true : false}>
+                            <ul className='w-full'>
+                                <li className='w-full'>
+                                    <Link to="/bannerV1/List">
+                                        <Button className='!text-[rgba(0,0,0,0.7)] !capitalise !pl-8 !justify-start !w-full !text-[13px] !font-[500] gap-3'>
+                                            <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Banner V1 List
+                                        </Button>
+                                    </Link>
+                                    <Button className='!text-[rgba(0,0,0,0.7)] !capitalise !pl-8 !justify-start !w-full !text-[13px] !font-[500] gap-3'
+                                        onClick={() => context.setIsOpenFullScreenPanel({
+                                            open: true,
+                                            model: 'Add Banners V1'
+                                        })}>
+                                        <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Add Banner V1
+                                    </Button>
+                                </li>
+                            </ul>
+                        </Collapse>
+
+                    </li>
+
+                    <li>
+                        <Link to="/">
+                            <Button className='w-full !capitalise !justify-start flex gap-3 text-[14px] !font-[500] !text-[rgba(0,0,0,0.8)] items-center !py-2 !hover:bg-[#f1f1f1]'
+                                onClick={() => isOpenSubMenu(6)}
+                            >
+                                <IoCartOutline className='text-[20px]' />
+                                <span>Blogs</span>
+                                <span className='!ml-auto !w-[30px] !h-[30px] flex items-center justfy-center'>
+                                    <FaAngleDown className={`transition-all ${subMenuIndex === 6 ? 'rotate-180' : ''}`} />
+                                </span>
+                            </Button>
+                        </Link>
+
+                        <Collapse isOpened={subMenuIndex === 6 ? true : false}>
+                            <ul className='w-full'>
+                                <li className='w-full'>
+                                    <Link to="/blog/list">
+                                        <Button className='!text-[rgba(0,0,0,0.7)] !capitalise !pl-8 !justify-start !w-full !text-[13px] !font-[500] gap-3'>
+                                            <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Blog List
+                                        </Button>
+                                    </Link>
+                                    <Button className='!text-[rgba(0,0,0,0.7)] !capitalise !pl-8 !justify-start !w-full !text-[13px] !font-[500] gap-3'
+                                        onClick={() => context.setIsOpenFullScreenPanel({
+                                            open: true,
+                                            model: 'Add Blog'
+                                        })}>
+                                        <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Add Blog
+                                    </Button>
+                                </li>
+                            </ul>
+                        </Collapse>
+
+                    </li>
+
+                    <li>
+                        <Link to="/">
+                            <Button className='w-full !capitalise !justify-start flex gap-3 text-[14px] !font-[500] !text-[rgba(0,0,0,0.8)] items-center !py-2 !hover:bg-[#f1f1f1]'
+                                onClick={() => isOpenSubMenu(7)}
+                            >
+                                <IoCartOutline className='text-[20px]' />
+                                <span>Banners V2</span>
+                                <span className='!ml-auto !w-[30px] !h-[30px] flex items-center justfy-center'>
+                                    <FaAngleDown className={`transition-all ${subMenuIndex === 7 ? 'rotate-180' : ''}`} />
+                                </span>
+                            </Button>
+                        </Link>
+
+                        <Collapse isOpened={subMenuIndex === 7 ? true : false}>
+                            <ul className='w-full'>
+                                <li className='w-full'>
+                                    <Link to="/bannerV2/list">
+                                        <Button className='!text-[rgba(0,0,0,0.7)] !capitalise !pl-8 !justify-start !w-full !text-[13px] !font-[500] gap-3'>
+                                            <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Banner V2 List
+                                        </Button>
+                                    </Link>
+                                    <Button className='!text-[rgba(0,0,0,0.7)] !capitalise !pl-8 !justify-start !w-full !text-[13px] !font-[500] gap-3'
+                                        onClick={() => context.setIsOpenFullScreenPanel({
+                                            open: true,
+                                            model: 'Add Banners V2'
+                                        })}>
+                                        <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Add Blog
+                                    </Button>
+                                </li>
+                            </ul>
+                        </Collapse>
+
+                    </li>
+
+                    <li>
+                        <Link to="/">
+                            <Button className='w-full !capitalise !justify-start flex gap-3 text-[14px] !font-[500] !text-[rgba(0,0,0,0.8)] items-center !py-2 !hover:bg-[#f1f1f1]'
+                                onClick={() => isOpenSubMenu(8)}
+                            >
+                                <IoCartOutline className='text-[20px]' />
+                                <span>Ads Banners</span>
+                                <span className='!ml-auto !w-[30px] !h-[30px] flex items-center justfy-center'>
+                                    <FaAngleDown className={`transition-all ${subMenuIndex === 8 ? 'rotate-180' : ''}`} />
+                                </span>
+                            </Button>
+                        </Link>
+
+                        <Collapse isOpened={subMenuIndex === 8 ? true : false}>
+                            <ul className='w-full'>
+                                <li className='w-full'>
+                                    <Link to="/adsBannerV1/list">
+                                        <Button className='!text-[rgba(0,0,0,0.7)] !capitalise !pl-8 !justify-start !w-full !text-[13px] !font-[500] gap-3'>
+                                            <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Ads Banner V1 List
+                                        </Button>
+                                    </Link>
+                                    <Link to="/adsBannerV2/list">
+                                        <Button className='!text-[rgba(0,0,0,0.7)] !capitalise !pl-8 !justify-start !w-full !text-[13px] !font-[500] gap-3'>
+                                            <span className='block w-[5px] h-[5px] rounded-full !bg-[rgba(0,0,0,0.2)]'></span>Ads Banner V2 List
+                                        </Button>
+                                    </Link>
+                                </li>
+                            </ul>
+                        </Collapse>
+
                     </li>
 
                     <li>

@@ -1,4 +1,4 @@
-import BlogModel from "../models/blog.model.js";
+import BannerV2Model from "../models/bannerV2.model.js"
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs";
 
@@ -9,10 +9,9 @@ cloudinary.config({
     secure: true,
 })
 
-
-//image upload
+// image upload
 var imagesArr = []
-export async function uploadImages(request, response) {
+export async function uploadBannerV2Images(request, response) {
     try {
         imagesArr = [];
 
@@ -25,19 +24,19 @@ export async function uploadImages(request, response) {
         };
 
         for (let i = 0; i < request?.files?.length; i++) {
-
-
-            const img = await cloudinary.uploader.upload(
+            await cloudinary.uploader.upload(
                 image[i].path,
                 options,
                 function (error, result) {
-                    console.log(result)
+                    if (error) {
+                        console.error(error);
+                        return;
+                    }
                     imagesArr.push(result.secure_url);
                     fs.unlinkSync(`uploads/${request.files[i].filename}`)
                 }
             )
         }
-
 
         return response.status(200).json({
             images: imagesArr
@@ -52,32 +51,35 @@ export async function uploadImages(request, response) {
     }
 }
 
-//create blog
-export async function addBlog(request, response) {
+// add banner V2
+export async function addBannerV2(request, response) {
     try {
-        let blog = new BlogModel({
+        let banner = new BannerV2Model({
+            bannerTitle: request.body.bannerTitle,
             images: imagesArr,
-            title: request.body.title,
-            description: request.body.description
+            catId: request.body.catId,
+            subCatId: request.body.subCatId,
+            thirdsubCatId: request.body.thirdsubCatId,
+            price: request.body.price,
+            alignInfo: request.body.alignInfo
         })
 
-        if (!blog) {
+        if (!banner) {
             return response.status(500).json({
-                message: "Blog not created",
+                message: "Banner V2 not created",
                 error: true,
                 success: false
             })
         }
 
-        blog = await blog.save()
-
+        banner = await banner.save()
         imagesArr = []
 
         return response.status(200).json({
-            message: "Blog created",
+            message: "Banner V2 created",
             error: false,
             success: true,
-            blog: blog
+            banner: banner
         })
     } catch (error) {
         return response.status(500).json({
@@ -88,30 +90,13 @@ export async function addBlog(request, response) {
     }
 }
 
-//get Blog
-export async function getBlogs(request, response) {
+// get banners V2
+export async function getBannersV2(request, response) {
     try {
-        const page = parseInt(request.query.page) || 1;
-        const perPage = parseInt(request.query.perPage);
-        const totalPosts = await BlogModel.countDocuments();
-        const totalPages = Math.ceil(totalPosts / perPage)
-
-        if (page > totalPages) {
-            return response.status(404).json({
-                message: "Page not found",
-                error: true,
-                success: false
-            })
-        }
-
-        const blogs = await BlogModel.find()
-            .skip((page - 1) * perPage)
-            .limit(perPage)
-            .exec();;
-
-        if (!blogs) {
-            return response.status(400).json({
-                message: "Blog not found",
+        const banners = await BannerV2Model.find()
+        if (!banners) {
+            return response.status(500).json({
+                message: "Banners V2 not found",
                 error: true,
                 success: false
             })
@@ -120,9 +105,7 @@ export async function getBlogs(request, response) {
         return response.status(200).json({
             error: false,
             success: true,
-            data: blogs,
-            totalPages: totalPages,
-            page: page
+            data: banners
         })
     } catch (error) {
         return response.status(500).json({
@@ -133,48 +116,21 @@ export async function getBlogs(request, response) {
     }
 }
 
-//get single Blog
-export async function getBlog(request, response) {
+// delete banner V2
+export async function deleteBannerV2(request, response) {
     try {
-        const blog = await BlogModel.findById(request.params.id)
+        const banner = await BannerV2Model.findById(request.params.id)
 
-        if (!blog) {
-            response.status(500).json({
-                message: "The Blog with the given ID was not found",
-                error: true,
-                success: false
-            })
-        }
-        return response.status(200).json({
-            error: false,
-            success: true,
-            blog: blog
-        })
-
-
-    } catch (error) {
-        return response.status(500).json({
-            message: error.message || error,
-            error: true,
-            success: false
-        })
-    }
-}
-
-export async function deleteBlog(request, response) {
-    try {
-        const blog = await BlogModel.findById(request.params.id)
-
-        if (!blog) {
+        if (!banner) {
             return response.status(400).json({
-                message: "blog not found",
+                message: "Banner V2 not found",
                 success: false,
                 error: true
             })
         }
 
         // Delete images from Cloudinary first
-        const images = blog.images || [];
+        const images = banner.images || [];
         for (const img of images) {
             const imgUrl = img;
             const urlArr = imgUrl.split("/")
@@ -190,19 +146,19 @@ export async function deleteBlog(request, response) {
             }
         }
 
-        // Delete the main Blog
-        const deletedBlog = await BlogModel.findByIdAndDelete(request.params.id)
+        // Delete the main banner
+        const deletedBanner = await BannerV2Model.findByIdAndDelete(request.params.id)
 
-        if (!deletedBlog) {
+        if (!deletedBanner) {
             return response.status(400).json({
-                message: "Blog not found",
+                message: "Banner V2 not found",
                 success: false,
                 error: true
             })
         }
 
         return response.status(200).json({
-            message: "Blog Deleted!",
+            message: "Banner V2 Deleted!",
             success: true,
             error: false
         })
@@ -216,33 +172,62 @@ export async function deleteBlog(request, response) {
     }
 }
 
-export async function updatedBlog(request, response) {
+// update banner V2
+export async function updatedBannerV2(request, response) {
     try {
-        //console.log(imagesArr)
-        const blog = await BlogModel.findByIdAndUpdate(
+        const banner = await BannerV2Model.findByIdAndUpdate(
             request.params.id,
             {
-                title: request.body.title,
-                description: request.body.description,
+                bannerTitle: request.body.bannerTitle,
                 images: imagesArr.length > 0 ? imagesArr[0] : request.body.images,
+                catId: request.body.catId,
+                subCatId: request.body.subCatId,
+                thirdsubCatId: request.body.thirdsubCatId,
+                price: request.body.price,
+                alignInfo: request.body.alignInfo
             },
             { new: true }
         )
 
-        if (!blog) {
-            return response.status(400).json({
-                message: "Blog cannnot be updated!",
+        if (!banner) {
+            return response.status(500).json({
+                message: "Banner V2 cannot be updated!",
                 success: false,
                 error: true
             })
         }
-        imagesArr = []
+        imagesArr = [];
 
-        response.status(200).json({
+        return response.status(200).json({
             success: true,
             error: false,
-            blog: blog,
-            message: "Blog updated successfully!"
+            banner: banner
+        })
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+    }
+}
+
+// get single banner V2
+export async function getBannerV2(request, response) {
+    try {
+        const banner = await BannerV2Model.findById(request.params.id)
+
+        if (!banner) {
+            return response.status(500).json({
+                message: "The Banner V2 with the given ID was not found",
+                error: true,
+                success: false
+            })
+        }
+        return response.status(200).json({
+            error: false,
+            success: true,
+            banner: banner
         })
 
     } catch (error) {
@@ -253,3 +238,4 @@ export async function updatedBlog(request, response) {
         })
     }
 }
+

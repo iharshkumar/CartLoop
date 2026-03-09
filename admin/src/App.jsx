@@ -34,6 +34,11 @@ import ProductDetails from './Pages/Products/productDetails.jsx';
 import AddRAMS from './Pages/Products/addRAM.jsx';
 import AddWEIGHT from './Pages/Products/addWEIGHT.jsx';
 import AddSIZE from './Pages/Products/addSIZE.jsx';
+import BannerV1List from './Pages/Banners/bannerV1list.jsx';
+import BlogList from './Pages/Blog/index.jsx';
+import BannerV2List from './Pages/BannersV2/bannerV2list.jsx';
+import AdsBannerV1List from './Pages/AdsBannerV1/index.jsx';
+import AdsBannerV2List from './Pages/AdsBannerV2/index.jsx';
 
 
 const alertBox = (type, msg) => {
@@ -274,7 +279,7 @@ function App() {
               <div className={`overflow-hidden sidebarWrapper ${isSidebarOpen === true ? 'w-[18%]' : 'w-[0px] opacity-0 transition-all'}`}>
                 <Sidebar />
               </div>
-              <div className={`contentRight !py-4 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
+              <div className={`contentRight !py-4 !mt-15 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
                 <Users />
               </div>
             </div>
@@ -294,7 +299,7 @@ function App() {
               <div className={`overflow-hidden sidebarWrapper ${isSidebarOpen === true ? 'w-[18%]' : 'w-[0px] opacity-0 transition-all'}`}>
                 <Sidebar />
               </div>
-              <div className={`contentRight !py-4 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
+              <div className={`contentRight !py-4 !mt-15 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
                 <Orders />
               </div>
             </div>
@@ -356,7 +361,7 @@ function App() {
               <div className={`overflow-hidden sidebarWrapper ${isSidebarOpen === true ? 'w-[18%]' : 'w-[0px] opacity-0 transition-all'}`}>
                 <Sidebar />
               </div>
-              <div className={`contentRight !py-4 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
+              <div className={`contentRight !py-4 !mt-15 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
                 <AddRAMS />
               </div>
             </div>
@@ -377,7 +382,7 @@ function App() {
               <div className={`overflow-hidden sidebarWrapper ${isSidebarOpen === true ? 'w-[18%]' : 'w-[0px] opacity-0 transition-all'}`}>
                 <Sidebar />
               </div>
-              <div className={`contentRight !py-4 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
+              <div className={`contentRight !py-4 !mt-15 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
                 <AddWEIGHT />
               </div>
             </div>
@@ -398,8 +403,103 @@ function App() {
               <div className={`overflow-hidden sidebarWrapper ${isSidebarOpen === true ? 'w-[18%]' : 'w-[0px] opacity-0 transition-all'}`}>
                 <Sidebar />
               </div>
-              <div className={`contentRight !py-4 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
+              <div className={`contentRight !py-4 !mt-15 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
                 <AddSIZE />
+              </div>
+            </div>
+          </section>
+        </>
+      )
+    },
+    {
+      path: '/bannerV1/List',
+      exact: true,
+      element: (
+        <>
+          <section className='main'>
+            <Header />
+            <div className='contentMain flex'>
+              <div className={`overflow-hidden sidebarWrapper ${isSidebarOpen === true ? 'w-[18%]' : 'w-[0px] opacity-0 transition-all'}`}>
+                <Sidebar />
+              </div>
+              <div className={`contentRight !py-4 !mt-15 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
+                <BannerV1List />
+              </div>
+            </div>
+          </section>
+        </>
+      )
+    },
+    {
+      path: '/bannerV2/List',
+      exact: true,
+      element: (
+        <>
+          <section className='main'>
+            <Header />
+            <div className='contentMain flex'>
+              <div className={`overflow-hidden sidebarWrapper ${isSidebarOpen === true ? 'w-[18%]' : 'w-[0px] opacity-0 transition-all'}`}>
+                <Sidebar />
+              </div>
+              <div className={`contentRight !py-4 !mt-15 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
+                <BannerV2List />
+              </div>
+            </div>
+          </section>
+        </>
+      )
+    },
+    {
+      path: '/adsBannerV1/list',
+      exact: true,
+      element: (
+        <>
+          <section className='main'>
+            <Header />
+            <div className='contentMain flex'>
+              <div className={`overflow-hidden sidebarWrapper ${isSidebarOpen === true ? 'w-[18%]' : 'w-[0px] opacity-0 transition-all'}`}>
+                <Sidebar />
+              </div>
+              <div className={`contentRight !py-4 !mt-15 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
+                <AdsBannerV1List />
+              </div>
+            </div>
+          </section>
+        </>
+      )
+    },
+    {
+      path: '/adsBannerV2/list',
+      exact: true,
+      element: (
+        <>
+          <section className='main'>
+            <Header />
+            <div className='contentMain flex'>
+              <div className={`overflow-hidden sidebarWrapper ${isSidebarOpen === true ? 'w-[18%]' : 'w-[0px] opacity-0 transition-all'}`}>
+                <Sidebar />
+              </div>
+              <div className={`contentRight !py-4 !mt-15 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
+                <AdsBannerV2List />
+              </div>
+            </div>
+          </section>
+        </>
+      )
+    },
+    {
+      path: '/blog/List',
+      exact: true,
+      element: (
+        <>
+          <section className='main'>
+            <Header />
+            <div className='contentMain flex'>
+              <div className={`overflow-hidden sidebarWrapper ${isSidebarOpen === true ? 'w-[18%]' : 'w-[0px] opacity-0 transition-all'}`}>
+                <Sidebar />
+              </div>
+              <div className={`contentRight !py-4 !mt-15 !px-5 ${isSidebarOpen === true ? 'w-[82%]' : 'w-[100%]'} transition-all`}>
+                <BlogList />
               </div>
             </div>
           </section>

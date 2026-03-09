@@ -23,25 +23,15 @@ const AdsBannerSlider = (props) => {
                   1280: { slidesPerView: props.items, spaceBetween: 10 }
                 }}
             >
-                <SwiperSlide>
-                    <BannerBox img ={'banner1.jpg'} link={'/'}/>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <BannerBox img ={'banner2.webp'} link={'/'}/>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <BannerBox img ={'banner6.webp'} link={'/'}/>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <BannerBox img ={'banner4.webp'} link={'/'}/>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <BannerBox img ={'banner5.webp'} link={'/'}/>
-                </SwiperSlide>
-                <SwiperSlide>
-                    <BannerBox img ={'banner6.webp'} link={'/'}/>
-                </SwiperSlide>
-                
+                {
+                    props?.data?.map((item, index) => {
+                        return (
+                            <SwiperSlide key={index}>
+                                <BannerBox img={item?.images?.[0]} link={'/'} />
+                            </SwiperSlide>
+                        )
+                    })
+                }
             </Swiper>
         </div>
 

@@ -14,6 +14,9 @@ import myListRouter from "./route/myList.route.js";
 import addressRouter from "./route/address.route.js";
 import homeSlidesRouter from "./route/homeSlides.route.js";
 import bannerV1Router from "./route/bannerV1.route.js";
+import bannerV2Router from "./route/bannerV2.route.js";
+import adsBannerV1Router from "./route/adsBannerV1.route.js";
+import adsBannerV2Router from "./route/adsBannerV2.route.js";
 import blogRouter from "./route/blog.route.js";
 
 const app = express();
@@ -46,6 +49,9 @@ app.use('/api/myList',myListRouter)
 app.use('/api/address',addressRouter)
 app.use('/api/homeSlides',homeSlidesRouter);
 app.use('/api/bannerV1',bannerV1Router);
+app.use('/api/bannerV2',bannerV2Router);
+app.use('/api/adsBannerV1',adsBannerV1Router);
+app.use('/api/adsBannerV2',adsBannerV2Router);
 app.use('/api/blog',blogRouter);
 
 
