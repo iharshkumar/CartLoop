@@ -1346,3 +1346,149 @@ export async function uploadBannerImages(request, response) {
         })
     }
 }
+
+
+export async function filter(request, response) {
+    try {
+        const {
+            catId,
+            subCatId,
+            thirdsubCatId,
+            size,
+            minPrice,
+            maxPrice,
+            rating,
+            page,
+            limit
+        } = request.query;
+
+        const filters = {};
+
+        // Category filters (can be arrays)
+        if (catId && catId.length) {
+            filters.catId = { $in: Array.isArray(catId) ? catId : [catId] };
+        }
+
+        if (subCatId && subCatId.length) {
+            filters.subCatId = { $in: Array.isArray(subCatId) ? subCatId : [subCatId] };
+        }
+
+        if (thirdsubCatId && thirdsubCatId.length) {
+            filters.thirdsubCatId = { $in: Array.isArray(thirdsubCatId) ? thirdsubCatId : [thirdsubCatId] };
+        }
+
+        if (size && size.length) {
+            filters.size = { $in: Array.isArray(size) ? size : [size] };
+        }
+
+        // Price range
+        if (minPrice || maxPrice) {
+            filters.price = {
+                $gte: minPrice ? Number(minPrice) : 0,
+                $lte: maxPrice ? Number(maxPrice) : Infinity
+            };
+        }
+
+        // Rating (min rating)
+        if (rating) {
+            filters.rating = { $gte: Number(rating) };
+        }
+
+        const pageNum = parseInt(page) || 1;
+        const limitNum = parseInt(limit) || 20;
+        const skip = (pageNum - 1) * limitNum;
+
+        const totalProducts = await ProductModel.countDocuments(filters);
+        const totalPages = Math.ceil(totalProducts / limitNum) || 1;
+
+        if (pageNum > totalPages && totalProducts > 0) {
+            return response.status(404).json({
+                message: "Page not found",
+                error: true,
+                success: false
+            });
+        }
+
+        const catIdArray = Array.isArray(catId) ? catId : (catId ? [catId] : []);
+        const pipeline = [{ $match: filters }];
+
+        if (catIdArray.length > 1) {
+            pipeline.push({
+                $addFields: {
+                    sortOrder: { $indexOfArray: [catIdArray, "$catId"] }
+                }
+            });
+            pipeline.push({ $sort: { sortOrder: 1, _id: -1 } });
+            // Remove the temporary sortOrder field just to keep response clean
+            pipeline.push({ $project: { sortOrder: 0 } });
+        } else {
+            pipeline.push({ $sort: { _id: -1 } });
+        }
+
+        pipeline.push({ $skip: skip });
+        pipeline.push({ $limit: limitNum });
+
+        // Populate category
+        pipeline.push({
+            $lookup: {
+                from: "categories",
+                localField: "category",
+                foreignField: "_id",
+                as: "category"
+            }
+        });
+
+        pipeline.push({
+            $unwind: {
+                path: "$category",
+                preserveNullAndEmptyArrays: true
+            }
+        });
+
+        const products = await ProductModel.aggregate(pipeline);
+
+        return response.status(200).json({
+            error: false,
+            success: true,
+            products,
+            totalPages,
+            page: pageNum,
+            limit: limitNum
+        });
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        });
+    }
+}
+
+
+const sortItems = (produtcs, sortBy, order) => {
+    return products.sort((a, b) => {
+        if (sortBy === 'name') {
+            return order === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+        }
+        if (sortBy === 'price') {
+            return order === 'asc' ? a.price - b.price : b.price - a.price
+        }
+        return;
+    })
+
+
+}
+
+export async function sortBy(request, response) {
+    const { products, sortBy, order } = request.body;
+
+    const sortedItems = sortItems([...products?.products], sortBy, order);
+
+    return response.status(200).json({
+        error: false,
+        success: true,
+        products: sortedItems,
+        totalPages: 0,
+        page: 0
+    })
+}
