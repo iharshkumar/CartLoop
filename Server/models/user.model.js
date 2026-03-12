@@ -26,9 +26,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: ""
     },
-    access_token:{
-        type:String,
-        default:""
+    access_token: {
+        type: String,
+        default: ""
     },
     verify_email: {
         type: Boolean,
@@ -61,21 +61,25 @@ const userSchema = new mongoose.Schema({
             ref: 'order'
         }
     ],
-    otp:{
-        type:String
+    otp: {
+        type: String
     },
-    otpExpires:{
-        type:Date
+    otpExpires: {
+        type: Date
     },
     role: {
         type: String,
         enum: ["ADMIN", "USER"],
         default: "USER"
+    },
+    signUpWithGoogle: {
+        type: Boolean,
+        default: false
     }
 },
     { timestamps: true }
 )
 
-const UserModel = mongoose.model("User",userSchema)
+const UserModel = mongoose.model("User", userSchema)
 
 export default UserModel

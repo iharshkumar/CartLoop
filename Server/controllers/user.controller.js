@@ -141,6 +141,85 @@ export async function verifyEmailController(request, response) {
     }
 }
 
+export async function authWithGoogle(request, response) {
+    const { name, email, password, avatar, mobile, role } = request.body;
+    try {
+        const existingUser = await UserModel.findOne({ email: email });
+        if (!existingUser) {
+            const user = await UserModel.create({
+                name: name,
+                email: email,
+                password: "null",
+                avatar: avatar,
+                mobile: mobile,
+                role: role,
+                verify_email: true,
+                signUpWithGoogle: true
+            })
+
+            await user.save();
+            const accesstoken = await generatedAccessToken(user._id);
+            const refreshToken = await generatedRefreshToken(user._id);
+
+            await UserModel.findByIdAndUpdate(user?._id, {
+                last_login_date: new Date()
+            })
+
+            const cookiesOption = {
+                httpOnly: true,
+                secure: true,
+                sameSite: "None"
+            }
+            response.cookie('accessToken', accesstoken, cookiesOption)
+            response.cookie('refreshToken', refreshToken, cookiesOption)
+
+            return response.json({
+                message: "Login Successfully",
+                error: false,
+                succes: true,
+                data: {
+                    accesstoken,
+                    refreshToken
+                }
+            })
+        }
+        else {
+            const accesstoken = await generatedAccessToken(existingUser._id);
+            const refreshToken = await generatedRefreshToken(existingUser._id);
+
+            await UserModel.findByIdAndUpdate(existingUser?._id, {
+                last_login_date: new Date()
+            })
+
+            const cookiesOption = {
+                httpOnly: true,
+                secure: true,
+                sameSite: "None"
+            }
+            response.cookie('accessToken', accesstoken, cookiesOption)
+            response.cookie('refreshToken', refreshToken, cookiesOption)
+
+            return response.json({
+                message: "Login Successfully",
+                error: false,
+                succes: true,
+                data: {
+                    accesstoken,
+                    refreshToken
+                }
+            })
+        }
+
+
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+    }
+
+}
 
 export async function loginUserContoller(request, response) {
     try {
@@ -369,7 +448,7 @@ export async function updateUserDetails(request, response) {
 
         let verifyCode = "";
         let emailChanged = false;
-        
+
         // Only check email change if email is provided in request
         if (email !== undefined && email !== null) {
             // Normalize emails for comparison (trim and lowercase)
@@ -391,21 +470,21 @@ export async function updateUserDetails(request, response) {
             hashPassword = userExist.password;
         }
 
-       
+
         // Build update data - only include fields that are provided
         const updateData = {
             name: name,
             mobile: mobile,
             password: hashPassword
         }
-        
+
         // Only include email in update if it's provided
         if (email !== undefined && email !== null) {
             updateData.email = email;
             updateData.otp = verifyCode !== "" ? verifyCode : null;
             updateData.otpExpires = verifyCode !== "" ? Date.now() + 600000 : null;
         }
-        
+
         // Only reset verify_email if email is provided AND actually changed, otherwise preserve existing value
         if (emailChanged) {
             updateData.verify_email = false
@@ -584,8 +663,8 @@ export async function resetpassword(request, response) {
         const { email, oldPassword, newPassword, confirmPassword, resetToken } = request.body
         if (!email || !newPassword || !confirmPassword) {
             return response.status(400).json({
-                error:true, 
-                success:false,
+                error: true,
+                success: false,
                 message: "Provide required fields email, newPassword, confirmPassword"
             })
         }
@@ -599,9 +678,6 @@ export async function resetpassword(request, response) {
             })
         }
 
-        // Two supported flows:
-        // - Logged-in change password: requires oldPassword
-        // - Forgot-password reset: requires resetToken (issued after OTP verification)
         if (resetToken) {
             try {
                 const decoded = jwt.verify(resetToken, process.env.JSON_WEB_TOKEN_SECRET_KEY)
@@ -628,41 +704,45 @@ export async function resetpassword(request, response) {
                 })
             }
 
-            const checkPassword = await bcryptjs.compare(oldPassword, user.password);
-            if(!checkPassword){
+            if (user.signUpWithGoogle === false) {
+                const checkPassword = await bcryptjs.compare(oldPassword, user.password);
+                if (!checkPassword) {
+                    return response.status(400).json({
+                        message: "Your old password is wrong",
+                        error: true,
+                        success: false
+                    })
+                }
+            }
+
+
+            if (newPassword !== confirmPassword) {
                 return response.status(400).json({
-                    message: "Your old password is wrong",
+                    message: "newPassword and confirmPassword must be same",
                     error: true,
                     success: false
                 })
             }
-        }
+
+            const salt = await bcryptjs.genSalt(10)
+            const hashPassword = await bcryptjs.hash(confirmPassword, salt)
+
+            user.password = hashPassword;
+            user.signUpWithGoogle = false;
+            await user.save()
 
 
-        if (newPassword !== confirmPassword) {
-            return response.status(400).json({
-                message: "newPassword and confirmPassword must be same",
-                error: true,
-                success: false
+            return response.json({
+                message: "Password updated successfully.",
+                error: false,
+                success: true
             })
+
+
+
         }
-
-        const salt = await bcryptjs.genSalt(10)
-        const hashPassword = await bcryptjs.hash(confirmPassword, salt)
-
-        user.password = hashPassword;
-        await user.save()
-
-
-        return response.json({
-            message: "Password updated successfully.",
-            error: false,
-            success: true
-        })
-
-
-
-    } catch (error) {
+    }
+    catch (error) {
         return response.status(500).json({
             message: error.message || error,
             error: true,
