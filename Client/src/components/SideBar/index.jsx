@@ -175,7 +175,7 @@ const SideBar = (props) => {
     }, []);
 
     return (
-        <aside className='sidebar !py-3 sticky top-[80px] z-[40] max-h-[calc(100vh-80px)] overflow-y-auto hide-scrollbar'>
+        <aside className='sidebar !py-3 sticky top-[40px] z-[40]'>
             <div className='box w-full bg-white !p-3 rounded-lg' >
                 <h3 className='w-full mb-3 text-[16px] font-[600] flex items-center'>
                     Shop By Category

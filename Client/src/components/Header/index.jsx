@@ -56,6 +56,7 @@ const Header = () => {
                     context.setIsLogin(false);
                     localStorage.removeItem("accesstoken", res?.data?.accesstoken)
                     localStorage.removeItem("refreshToken", res?.data?.refreshToken)
+                    context.setUserData(null)
                     history("/")
                 }
             }
@@ -63,7 +64,7 @@ const Header = () => {
     }
 
     return (
-        <header className="bg-white relative sticky -top-[110px] !z-[1000]">
+        <header className="bg-white relative sticky !-top-[110px] !z-[1000]">
             <div className="top-strip py-2 border-t-[1px] border-grey-250 border-b-[1px] ">
                 <div className="container">
                     <div className="flex items-center justify-between">
@@ -222,7 +223,7 @@ const Header = () => {
                             <li>
                                 <Tooltip title="Cart">
                                     <IconButton aria-label="cart" onClick={() => context.setOpenCartPanel(true)}>
-                                        <StyledBadge badgeContent={4} color="secondary">
+                                        <StyledBadge badgeContent={context?.cartData?.length} color="secondary">
                                             <ShoppingCartIcon />
                                         </StyledBadge>
                                     </IconButton>

@@ -23,7 +23,7 @@ import Checkout from "./Pages/Checkout";
 import MyAccount from "./Pages/MyAccount/index.jsx";
 import MyList from "./Pages/MyList/index.jsx";
 import Orders from "./Pages/Orders";
-import { fetchDataFromApi } from "./utils/api.js";
+import { fetchDataFromApi, postData, editData } from "./utils/api.js";
 import Address from "./Pages/MyAccount/address.jsx";
 
 const alertBox = (type, msg) => {
@@ -52,7 +52,7 @@ function App() {
   })
   const [userData, setUserData] = useState(null)
   const apiUrl = import.meta.env.VITE_API_URL;
-
+  const [cartData, setCartData] = useState([]);
 
   const handleOpenProductDetailsModal = (status, item) => {
     setOpenProductDetailsModal({
@@ -87,6 +87,8 @@ function App() {
           window.location.href = "/login"
         }
       })
+
+      getCartItems();
     }
   }, [])
 
@@ -97,6 +99,64 @@ function App() {
       }
     })
   }, [])
+
+
+  const addToCart = async (product, userId, quantity, variations = {}) => {
+    //console.log(product)
+    if (userId === undefined) {
+      alertBox("error", "Please login to add product to cart");
+      return false;
+    }
+
+    const data = {
+      productTitle: product?.name,
+      image: product?.images[0],
+      price: product?.price,
+      oldPrice: product?.oldPrice,
+      discount: product?.discount,
+      rating: product?.rating,
+      quantity: quantity,
+      subTotal: parseInt(product?.price * quantity),
+      productId: product?._id,
+      countInStock: product?.countInStock,
+      userId: userId,
+      size: variations?.productSize || "",
+      weight: variations?.productWeight || "",
+      ram: variations?.productRam || "",
+      brand: product?.brand,
+    }
+
+
+
+    postData("/api/cart/add", data).then((res) => {
+      if (res?.error === false) {
+        alertBox("success", res?.message);
+
+        getCartItems();
+      }
+      else {
+        alertBox("error", res?.message);
+      }
+    })
+  }
+
+  const getCartItems = () => {
+    fetchDataFromApi(`/api/cart/get/`).then((res) => {
+      if (res?.error === false) {
+        setCartData(res?.data)
+      }
+    })
+  }
+
+  const updateCartItem = (id, data) => {
+    editData(`/api/cart/update`, { ...data, _id: id }).then((res) => {
+      if (res?.error === false) {
+        getCartItems();
+      } else {
+        alertBox("error", res?.message);
+      }
+    })
+  }
 
   const values = {
     handleOpenProductDetailsModal,
@@ -110,7 +170,12 @@ function App() {
     userData,
     setUserData,
     setCatData,
-    catData
+    catData,
+    addToCart,
+    getCartItems,
+    updateCartItem,
+    cartData,
+    setCartData
   }
 
   return (

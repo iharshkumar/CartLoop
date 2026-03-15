@@ -56,7 +56,7 @@ export const uploadImage = async (url, updatedData) => {
 
     var response;
     await axios.put(apiUrl + url, updatedData, params).then((res) => {
-        response = res
+        response = res.data
     })
     return response;
 
@@ -75,7 +75,7 @@ export const editData = async (url, updatedData) => {
 
     var response;
     await axios.put(apiUrl + url, updatedData, params).then((res) => {
-        response = res
+        response = res.data
     })
     return response;
 
@@ -89,6 +89,10 @@ export const deleteData = async (url) => {
             "Content-type": "application/json"
         }
     }
-    const { res } = await axios.delete(apiUrl + url, params)
-    return res
+    try {
+        const res = await axios.delete(apiUrl + url, params)
+        return res.data
+    } catch (error) {
+        console.log(error)
+    }
 }

@@ -5,10 +5,40 @@ import { FaRegHeart } from 'react-icons/fa';
 import { MdOutlineShoppingCart } from 'react-icons/md';
 import { IoGitCompareOutline } from 'react-icons/io5';
 
+import { MyContext } from '../../App';
+
 const ProductDetailsComponents = (props) => {
 
-    const [productActionIndex, setProductActionIndex] = useState(null)
+    const [productRamIndex, setProductRamIndex] = useState(null)
+    const [productSizeIndex, setProductSizeIndex] = useState(null)
+    const [productWeightIndex, setProductWeightIndex] = useState(null)
+    const [qtyVal, setQtyVal] = useState(1);
 
+    const context = React.useContext(MyContext);
+
+    const addToCart = () => {
+        const variations = {
+            productRam: productRamIndex !== null ? props?.item?.productRam[productRamIndex] : "",
+            productSize: productSizeIndex !== null ? props?.item?.size[productSizeIndex] : "",
+            productWeight: productWeightIndex !== null ? props?.item?.productWeight[productWeightIndex] : ""
+        }
+
+        // Check if required variations are selected
+        if (props?.item?.productRam?.length !== 0 && productRamIndex === null) {
+            context?.alertBox("error", "Please select RAM");
+            return;
+        }
+        if (props?.item?.size?.length !== 0 && productSizeIndex === null) {
+            context?.alertBox("error", "Please select SIZE");
+            return;
+        }
+        if (props?.item?.productWeight?.length !== 0 && productWeightIndex === null) {
+            context?.alertBox("error", "Please select Weight");
+            return;
+        }
+
+        context?.addToCart(props?.item, context?.userData?._id, qtyVal, variations);
+    }
 
     return (
 
@@ -51,7 +81,7 @@ const ProductDetailsComponents = (props) => {
                         {
                             props?.item?.productRam?.map((item, index) => {
                                 return (
-                                    <Button className={`${productActionIndex === index ? '!bg-[#ff5252] !text-white-[300]' : ''}`} onClick={() => setProductActionIndex(index)}>{item}</Button>
+                                    <Button key={index} className={`${productRamIndex === index ? '!bg-[#ff5252] !text-white' : ''}`} onClick={() => setProductRamIndex(index)}>{item}</Button>
                                 )
                             })
                         }
@@ -68,7 +98,7 @@ const ProductDetailsComponents = (props) => {
                         {
                             props?.item?.size?.map((item, index) => {
                                 return (
-                                    <Button className={`${productActionIndex === index ? '!bg-[#ff5252] !text-white-[300]' : ''}`} onClick={() => setProductActionIndex(index)}>{item}</Button>
+                                    <Button key={index} className={`${productSizeIndex === index ? '!bg-[#ff5252] !text-white' : ''}`} onClick={() => setProductSizeIndex(index)}>{item}</Button>
                                 )
                             })
                         }
@@ -84,7 +114,7 @@ const ProductDetailsComponents = (props) => {
                         {
                             props?.item?.productWeight?.map((item, index) => {
                                 return (
-                                    <Button className={`${productActionIndex === index ? '!bg-[#ff5252] !text-white-[300]' : ''}`} onClick={() => setProductActionIndex(index)}>{item}</Button>
+                                    <Button key={index} className={`${productWeightIndex === index ? '!bg-[#ff5252] !text-white' : ''}`} onClick={() => setProductWeightIndex(index)}>{item}</Button>
                                 )
                             })
                         }
@@ -98,10 +128,10 @@ const ProductDetailsComponents = (props) => {
             <p className='text-[14px] !mt-3 !mb-3'>Free Shipping (Est. Delivery Time 2-3 Days)</p>
             <div className='flex items-center  gap-5 !  py-3'>
                 <div className='qtyBoxWrapper w-[70px]'>
-                    <QtyBox />
+                    <QtyBox onChange={(qty) => setQtyVal(qty)} />
                 </div>
 
-                <Button className='btn-org gap-2'><MdOutlineShoppingCart className='text-[22px] ' />
+                <Button className='btn-org gap-2' onClick={addToCart}><MdOutlineShoppingCart className='text-[22px] ' />
                     Add To Cart
                 </Button>
 

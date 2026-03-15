@@ -19,13 +19,6 @@ import Drawer from '@mui/material/Drawer';
 import CartPanel from "../CartPanel";
 import { MyContext } from '../../App.jsx';
 
-
-
-
-
-
-
-
 const Footer = () => {
     const context = useContext(MyContext)
     return (
@@ -214,11 +207,26 @@ const Footer = () => {
             {/*Cart Panel*/}
             <Drawer open={context.openCartPanel} onClose={() => context.setOpenCartPanel(false)} anchor={"right"}
                 className="cartPanel">
-                <div className="flex items-center justify-between !py-3 !px-4 gap-3 border-b border-[rgba(0,0,0,0.1)]">
-                    <h4>Shopping Cart (1)</h4>
-                    <IoCloseSharp className="text-[20px] cursor-pointer" onClick={() => context.setOpenCartPanel(false)} />
+                <div className='flex flex-col h-full max-h-screen overflow-hidden'>
+                    <div className="flex items-center justify-between !py-3 !px-4 gap-3 border-b border-[rgba(0,0,0,0.1)] flex-shrink-0">
+                        <h4>Shopping Cart ({context?.cartData?.length})</h4>
+                        <IoCloseSharp className="text-[20px] cursor-pointer" onClick={() => context.setOpenCartPanel(false)} />
+                    </div>
+
+                    {
+                        context?.cartData?.length !== 0 ? <CartPanel data={context?.cartData} /> :
+                            <>
+                                <div className='flex items-center justify-center flex-col h-full'>
+                                    <img src="/empty-cart.png" className='w-[150px] h-[150px] !mb-0' />
+                                    <p className='text-[14px] font-[500] text-[rgba(0,0,0,0.7)] !mt-0'>Cart is empty</p>
+                                    <Button className="btn-org btn-sm !mt-4"
+                                        onClick={() => context.setOpenCartPanel(false)}>
+                                        Continue Shopping
+                                    </Button>
+                                </div>
+                            </>
+                    }
                 </div>
-                <CartPanel />
             </Drawer>
 
         </>
