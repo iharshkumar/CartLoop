@@ -124,7 +124,6 @@ const ProductDetailsComponents = (props) => {
 
 
 
-
             <p className='text-[14px] !mt-3 !mb-3'>Free Shipping (Est. Delivery Time 2-3 Days)</p>
             <div className='flex items-center  gap-5 !  py-3'>
                 <div className='qtyBoxWrapper w-[70px]'>

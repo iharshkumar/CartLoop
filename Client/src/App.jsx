@@ -75,22 +75,25 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem('accesstoken')
-    if (token !== undefined && token !== null && token !== "") {
+    if (isLogin === true && token !== undefined && token !== null && token !== "") {
       fetchDataFromApi(`/api/user/user-details`).then((res) => {
-
-        setUserData(res.data)
-        if (res?.status !== 200) {
+        if (res?.status === 200) {
+          setUserData(res.data)
+        } else {
           localStorage.removeItem("accesstoken")
           localStorage.removeItem("refreshToken")
-
+          setIsLogin(false)
+          setUserData(null)
           alertBox("error", "Your session is closed please login again")
           window.location.href = "/login"
         }
       })
 
       getCartItems();
+    } else {
+      setUserData(null);
     }
-  }, [])
+  }, [isLogin])
 
   useEffect(() => {
     fetchDataFromApi("/api/category").then((res) => {
@@ -161,6 +164,10 @@ function App() {
   const values = {
     handleOpenProductDetailsModal,
     setOpenProductDetailsModal,
+    openProductDetailsModal,
+    handleCloseProductDetailsModal,
+    fullWidth,
+    maxWidth,
     setOpenCartPanel,
     toggleCartPanel,
     openCartPanel,
@@ -224,40 +231,7 @@ function App() {
 
       <Toaster />
 
-      <Dialog
-        open={openProductDetailsModal.open}
-        fullWidth={fullWidth}
-        maxWidth={maxWidth}
-        onClose={handleCloseProductDetailsModal}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        className="productDetailModal"
-      >
 
-        <DialogContent>
-          <div className="flex items-center w-full productDetailModalContainer relative">
-            <Button className="w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000]
-             !absolute top-[15px] right-[15px] !bg-[#f1f1f1]" onClick={handleCloseProductDetailsModal}>
-              <IoCloseSharp className="text-[20px]" />
-            </Button>
-
-            {
-              openProductDetailsModal?.item?.length !== 0 &&
-              <>
-                <div className="col1 w-[40%] !pl-3 !pr-2">
-                  <ProductZoom images={openProductDetailsModal?.item?.images} className='w-full' />
-                </div>
-
-                <div className="col2 w-[60%] !py-5 !px-8 !pr-16 productContent overflow-y-auto max-h-[70vh]">
-                  <ProductDetailsComponents item={openProductDetailsModal?.item} />
-                </div>
-
-              </>
-            }
-
-          </div>
-        </DialogContent>
-      </Dialog>
 
 
 

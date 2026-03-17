@@ -10,6 +10,7 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { MyContext } from '../../App';
 import { deleteData, editData, postData } from '../../utils/api.js';
 import CircularProgress from '@mui/material/CircularProgress';
+import { IoMdClose } from 'react-icons/io';
 
 const ProductItemListView = (props) => {
 
@@ -174,6 +175,12 @@ const ProductItemListView = (props) => {
                 {
                     isShowTabs === true &&
                     <div className='flex items-center justify-center absolute top-0 left-0 w-full h-full !bg-[rgba(0,0,0,0.7)] !z-60 !p-3 gap-2 flex-col'>
+
+                        <Button className='!absolute !top-[13px] !right-[14px] cursor-pointer !min-w-[35px] !min-h-[35px] !w-[35px] !rounded-full !bg-[rgba(255,255,255,1)]'
+                            onClick={() => setIsShowTabs(false)}>
+                            <IoMdClose className=' !text-black !z-[90]  cursor-pointer text-[25px]' />
+                        </Button>
+
                         <h4 className='text-white text-[14px] font-[500]'>Select {tabType.toUpperCase()}</h4>
                         <div className='flex items-center justify-center gap-2 flex-wrap'>
                             {

@@ -18,6 +18,11 @@ import { IoCloseSharp } from "react-icons/io5";
 import Drawer from '@mui/material/Drawer';
 import CartPanel from "../CartPanel";
 import { MyContext } from '../../App.jsx';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import { ProductZoom } from "../ProductZoom/index.jsx";
+import ProductDetailsComponents from "../ProductDetails/index.jsx";
+
 
 const Footer = () => {
     const context = useContext(MyContext)
@@ -228,6 +233,41 @@ const Footer = () => {
                     }
                 </div>
             </Drawer>
+
+            <Dialog
+                open={context?.openProductDetailsModal.open}
+                fullWidth={context?.fullWidth}
+                maxWidth={context?.maxWidth}
+                onClose={context?.handleCloseProductDetailsModal}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                className="productDetailModal"
+            >
+
+                <DialogContent>
+                    <div className="flex items-center w-full productDetailModalContainer relative">
+                        <Button className="w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000]
+             !absolute top-[15px] right-[15px] !bg-[#f1f1f1]" onClick={context?.handleCloseProductDetailsModal}>
+                            <IoCloseSharp className="text-[20px]" />
+                        </Button>
+
+                        {
+                            context?.openProductDetailsModal?.item?.length !== 0 &&
+                            <>
+                                <div className="col1 w-[40%] !mt-4 !h-[480px] !pl-3 !pr-2">
+                                    <ProductZoom images={context?.openProductDetailsModal?.item?.images} className='w-full' />
+                                </div>
+
+                                <div className="col2 w-[60%] !py-5 !px-8 !pr-16 productContent overflow-y-auto max-h-[70vh]">
+                                    <ProductDetailsComponents item={context?.openProductDetailsModal?.item} />
+                                </div>
+
+                            </>
+                        }
+
+                    </div>
+                </DialogContent>
+            </Dialog>
 
         </>
     )

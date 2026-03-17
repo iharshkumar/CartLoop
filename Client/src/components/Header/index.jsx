@@ -54,9 +54,10 @@ const Header = () => {
             { withCredentials: true }).then((res) => {
                 if (res?.error === false) {
                     context.setIsLogin(false);
-                    localStorage.removeItem("accesstoken", res?.data?.accesstoken)
-                    localStorage.removeItem("refreshToken", res?.data?.refreshToken)
-                    context.setUserData(null)
+                    localStorage.removeItem("accesstoken")
+                    localStorage.removeItem("refreshToken")
+                    context.setUserData(null);
+                    context.setCartData([]);
                     history("/")
                 }
             }
