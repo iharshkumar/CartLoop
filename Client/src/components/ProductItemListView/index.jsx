@@ -10,7 +10,7 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { MyContext } from '../../App';
 import { deleteData, editData, postData } from '../../utils/api.js';
 import CircularProgress from '@mui/material/CircularProgress';
-import { IoMdClose } from 'react-icons/io';
+import { IoMdClose, IoMdHeart } from 'react-icons/io';
 
 const ProductItemListView = (props) => {
 
@@ -24,6 +24,8 @@ const ProductItemListView = (props) => {
     const [activeWeight, setActiveWeight] = useState(null);
     const [tabType, setTabType] = useState('size'); // 'size', 'ram', 'weight'
     const [isShowTabs, setIsShowTabs] = useState(false);
+    const [isAddedToMyList, setIsAddedToMyList] = useState(false);
+
 
     const addToCart = async (product, userId, quantity) => {
         setIsLoading(true);
@@ -101,6 +103,10 @@ const ProductItemListView = (props) => {
             cartItem.productId.includes(props?.item?._id)
         )
 
+        const myListItem = context?.myListData?.filter((item) =>
+            item?.productId.includes(props?.item?._id)
+        )
+
         if (item.length !== 0) {
             setIsAdded(true)
             setCartItem(item)
@@ -109,7 +115,14 @@ const ProductItemListView = (props) => {
             setIsAdded(false)
             setQuantity(1)
         }
-    }, [context?.cartData])
+
+
+        if (myListItem.length !== 0) {
+            setIsAddedToMyList(true)
+        } else {
+            setIsAddedToMyList(false)
+        }
+    }, [context?.cartData, context?.myListData])
 
     const updateCartQty = (id, qty) => {
         const obj = {
@@ -152,19 +165,61 @@ const ProductItemListView = (props) => {
         }
     }
 
+    const handleAddToMyList = (item) => {
+        if (context?.userData?._id === null || context?.userData?._id === undefined) {
+            context?.alertBox("error", "Please login to add product to my Wishlist");
+            return false;
+        }
+
+        if (isAddedToMyList === true) {
+            const myListItem = context?.myListData?.find((listItem) => listItem.productId === item?._id);
+            if (myListItem) {
+                deleteData(`/api/myList/${myListItem?._id}`).then((res) => {
+                    if (res?.error === false) {
+                        context?.alertBox("success", "Item Removed from Wishlist");
+                        setIsAddedToMyList(false);
+                        context?.getMyListData();
+                    }
+                })
+            }
+        } else {
+            const obj = {
+                productId: item?._id,
+                userId: context?.userData?._id,
+                productTitle: item?.name,
+                image: item?.images[0],
+                price: item?.price,
+                oldPrice: item?.oldPrice,
+                discount: item?.discount,
+                rating: item?.rating,
+                brand: item?.brand,
+            }
+
+            postData("/api/myList/add", obj).then((res) => {
+                if (res?.error === false) {
+                    context?.alertBox("success", "Item Added to Wishlist");
+                    setIsAddedToMyList(true);
+                    context?.getMyListData();
+                } else {
+                    context?.alertBox("error", res?.message);
+                }
+            })
+        }
+    }
+
     return (
         <div className='productItem bg-white border border-gray-200 rounded-lg p-4 mb-4 flex gap-4' style={{ flexDirection: 'row', height: '250px' }}>
             <div className="productItem__imageWrapper flex-shrink-0" style={{ width: '200px', borderRadius: '12px', aspectRatio: '3/4' }}>
                 <Link to={`/product/${props?.item?._id}`} className="productItem__imageLink">
                     <div className='productItem__imageContainer' style={{ width: '100%', height: '100%' }}>
                         <img
-                            src={props?.item?.images?.[0] || 'https://via.placeholder.com/300'}
+                            src={props?.item?.images?.[0]}
                             alt={props?.item?.name}
                             className='productItem__image productItem__image--primary'
                             style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
                         />
                         <img
-                            src={props?.item?.images?.[1] || props?.item?.images?.[0] || 'https://via.placeholder.com/300'}
+                            src={props?.item?.images?.[1] || props?.item?.images?.[0]}
                             alt={props?.item?.name}
                             className='productItem__image productItem__image--secondary'
                             style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
@@ -232,8 +287,10 @@ const ProductItemListView = (props) => {
                     <Button className='productItem__actionBtn' title="Compare">
                         <IoGitCompareOutline />
                     </Button>
-                    <Button className='productItem__actionBtn' title="Add to Wishlist">
-                        <FaRegHeart />
+                    <Button className='productItem__actionBtn' title="Add to Wishlist" onClick={() => handleAddToMyList(props?.item)}>
+                        {
+                            isAddedToMyList === true ? <IoMdHeart className='!text-red-500 group-hover:!text-white hover:!text-white' /> : <FaRegHeart className='group-hover:!text-white hover:!text-white' />
+                        }
                     </Button>
                 </div>
             </div>
