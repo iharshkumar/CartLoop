@@ -21,27 +21,29 @@ const CartPage = () => {
                         <div className='  !p-3 !w-full !border-b border-[rgba(0,0,0,0.1)]'>
                             <h2>Your Cart</h2>
                             <p className='!mt-0'>There are <span className='font-bold text-[#ff5252]'>{context?.cartData?.length}</span> products in your cart</p>
+
+                            {
+                                context?.cartData?.length !== 0 ? context?.cartData?.map((item, index) => {
+                                    return (
+                                        <CartItems qty={item?.quantity} key={index} item={item} />
+                                    )
+                                })
+                                    :
+                                    <>
+                                        <div className='flex items-center justify-center !py-10 flex-col h-full '>
+                                            <img src="/empty-cart.png" className='w-[150px] h-[150px] !mb-0' />
+                                            <p className='text-[14px] font-[500] text-[rgba(0,0,0,0.7)] !mt-0'>Cart is empty</p>
+                                            <Link to="/">
+                                                <Button className="btn-org btn-sm !mt-4 !mb-5">
+                                                    Continue Shopping
+                                                </Button>
+                                            </Link>
+                                        </div>
+                                    </>
+                            }
                         </div>
 
-                        {
-                            context?.cartData?.length !== 0 ? context?.cartData?.map((item, index) => {
-                                return (
-                                    <CartItems qty={item?.quantity} key={index} item={item} />
-                                )
-                            })
-                                :
-                                <>
-                                    <div className='flex items-center justify-center !py-10 flex-col h-full '>
-                                        <img src="/empty-cart.png" className='w-[150px] h-[150px] !mb-0' />
-                                        <p className='text-[14px] font-[500] text-[rgba(0,0,0,0.7)] !mt-0'>Cart is empty</p>
-                                        <Link to="/">
-                                            <Button className="btn-org btn-sm !mt-4 !mb-5">
-                                                Continue Shopping
-                                            </Button>
-                                        </Link>
-                                    </div>
-                                </>
-                        }
+
                     </div>
                 </div>
 

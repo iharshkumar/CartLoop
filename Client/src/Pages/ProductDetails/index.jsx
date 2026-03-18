@@ -97,12 +97,12 @@ export const ProductDetails = () => {
                         </div>
                         :
                         <>
-                            <div className='container flex gap-8 items-center'>
+                            <div className='container flex gap-15 items-center'>
                                 <div className='productZoomContainer w-[30%] '>
                                     <ProductZoom images={productData?.images} />
                                 </div>
 
-                                <div className='productContent w-[60%] !pr-10 !pl=10'>
+                                <div className='productContent w-[70%] !pr-15 !pl=15'>
                                     <ProductDetailsComponents item={productData} reviewCount={reviewCount} gotoReviewSection={gotoReviewSection} />
                                 </div>
                             </div>

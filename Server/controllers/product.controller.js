@@ -19,8 +19,15 @@ var imagesArr = []
 export async function uploadImages(request, response) {
     try {
         imagesArr = [];
+        const files = request.files;
 
-        const image = request.files;
+        if (!files || files.length === 0) {
+            return response.status(400).json({
+                message: "No files uploaded",
+                error: true,
+                success: false
+            });
+        }
 
         const options = {
             use_filename: true,
@@ -28,18 +35,20 @@ export async function uploadImages(request, response) {
             overwrite: false
         };
 
-        for (let i = 0; i < request?.files?.length; i++) {
-
-
-            const img = await cloudinary.uploader.upload(
-                image[i].path,
-                options,
-                function (error, result) {
-                    //console.log(result)
+        for (let i = 0; i < files.length; i++) {
+            try {
+                const result = await cloudinary.uploader.upload(files[i].path, options);
+                if (result && result.secure_url) {
                     imagesArr.push(result.secure_url);
-                    fs.unlinkSync(`uploads/${request.files[i].filename}`)
                 }
-            )
+            } catch (uploadError) {
+                console.error(`Error uploading file ${files[i].filename}:`, uploadError);
+            } finally {
+                // Ensure local file is deleted even if upload fails
+                if (fs.existsSync(files[i].path)) {
+                    fs.unlinkSync(files[i].path);
+                }
+            }
         }
 
         return response.status(200).json({

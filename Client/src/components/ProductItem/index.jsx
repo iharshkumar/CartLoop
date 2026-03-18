@@ -13,10 +13,12 @@ import { useEffect } from 'react';
 import { deleteData, editData, postData } from '../../utils/api.js';
 import CircularProgress from '@mui/material/CircularProgress';
 import { IoMdClose } from "react-icons/io";
+import { IoMdHeart } from 'react-icons/io';
 
 const ProductItem = (props) => {
     const [quantity, setQuantity] = useState(1);
     const [isAdded, setIsAdded] = useState(false);
+    const [isAddedToMyList, setIsAddedToMyList] = useState(false);
     const [cartItem, setCartItem] = useState([])
     const context = useContext(MyContext);
     const [isLoading, setIsLoading] = useState(false);
@@ -103,6 +105,10 @@ const ProductItem = (props) => {
             cartItem.productId.includes(props?.item?._id)
         )
 
+        const myListItem = context?.myListData?.filter((item) =>
+            item?.productId.includes(props?.item?._id)
+        )
+
         if (item.length !== 0) {
             setIsAdded(true)
             setCartItem(item)
@@ -111,7 +117,13 @@ const ProductItem = (props) => {
             setIsAdded(false)
             setQuantity(1)
         }
-    }, [context?.cartData])
+
+        if (myListItem.length !== 0) {
+            setIsAddedToMyList(true)
+        } else {
+            setIsAddedToMyList(false)
+        }
+    }, [context?.cartData, context?.myListData])
 
     const updateCartQty = (id, qty) => {
         const obj = {
@@ -153,6 +165,49 @@ const ProductItem = (props) => {
             })
         }
     }
+    const handleAddToMyList = (item) => {
+        if (context?.userData?._id === null || context?.userData?._id === undefined) {
+            context?.alertBox("error", "Please login to add product to my Wishlist");
+            return false;
+        }
+
+        if (isAddedToMyList === true) {
+            const myListItem = context?.myListData?.find((listItem) => listItem.productId === item?._id);
+            if (myListItem) {
+                deleteData(`/api/myList/${myListItem?._id}`).then((res) => {
+                    if (res?.error === false) {
+                        context?.alertBox("success", "Item Removed from Wishlist");
+                        setIsAddedToMyList(false);
+                        context?.getMyListData();
+                    }
+                })
+            }
+        } else {
+            const obj = {
+                productId: item?._id,
+                userId: context?.userData?._id,
+                productTitle: item?.name,
+                image: item?.images[0],
+                price: item?.price,
+                oldPrice: item?.oldPrice,
+                discount: item?.discount,
+                rating: item?.rating,
+                brand: item?.brand,
+            }
+
+            postData("/api/myList/add", obj).then((res) => {
+                if (res?.error === false) {
+                    context?.alertBox("success", "Item Added to Wishlist");
+                    setIsAddedToMyList(true);
+                    context?.getMyListData();
+                } else {
+                    context?.alertBox("error", res?.message);
+                }
+            })
+        }
+    }
+
+
 
     return (
         <div className='productItem '>
@@ -232,8 +287,11 @@ const ProductItem = (props) => {
                     <Button className='productItem__actionBtn' title="Compare">
                         <IoGitCompareOutline />
                     </Button>
-                    <Button className='productItem__actionBtn' title="Add to Wishlist">
-                        <FaRegHeart />
+                    <Button className={`productItem__actionBtn `} title="Add to Wishlist"
+                        onClick={() => handleAddToMyList(props?.item)}>
+                        {
+                            isAddedToMyList === true ? <IoMdHeart className='!text-red-500 group-hover:!text-white hover:!text-white' /> : <FaRegHeart className='group-hover:!text-white hover:!text-white' />
+                        }
                     </Button>
                 </div>
             </div>

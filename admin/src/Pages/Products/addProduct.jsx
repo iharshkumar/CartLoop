@@ -180,7 +180,7 @@ const AddProduct = () => {
   const setPreviewsFun = (previewsArr) => {
     const imgArr = previews;
     for (let i = 0; i < previewsArr.length; i++) {
-      imgArr.push(previews[i])
+      imgArr.push(previewsArr[i])
     }
     setPreviews([])
     setTimeout(() => {
@@ -194,7 +194,7 @@ const AddProduct = () => {
   const setBannerImagesFun = (previewsArr) => {
     const imgArr = bannerPreviews;
     for (let i = 0; i < previewsArr.length; i++) {
-      imgArr.push(previews[i])
+      imgArr.push(previewsArr[i])
     }
     setBannerPreviews([])
     setTimeout(() => {

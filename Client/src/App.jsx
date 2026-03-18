@@ -7,12 +7,6 @@ import Home from './Pages/Home';
 import ProductListing from './Pages/ProductListing';
 import ProductDetails from './Pages/ProductDetails';
 import { createContext } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import { ProductZoom } from "./components/ProductZoom";
-import { IoCloseSharp } from "react-icons/io5";
-import ProductDetailsComponents from "./components/ProductDetails";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import CartPage from "./Pages/Cart";
@@ -53,6 +47,7 @@ function App() {
   const [userData, setUserData] = useState(null)
   const apiUrl = import.meta.env.VITE_API_URL;
   const [cartData, setCartData] = useState([]);
+  const [myListData, setMyListData] = useState([]);
 
   const handleOpenProductDetailsModal = (status, item) => {
     setOpenProductDetailsModal({
@@ -90,6 +85,7 @@ function App() {
       })
 
       getCartItems();
+      getMyListData();
     } else {
       setUserData(null);
     }
@@ -161,6 +157,14 @@ function App() {
     })
   }
 
+  const getMyListData = () => {
+    fetchDataFromApi(`/api/myList/`).then((res) => {
+      if (res?.error === false) {
+        setMyListData(res?.data)
+      }
+    })
+  }
+
   const values = {
     handleOpenProductDetailsModal,
     setOpenProductDetailsModal,
@@ -182,7 +186,10 @@ function App() {
     getCartItems,
     updateCartItem,
     cartData,
-    setCartData
+    setCartData,
+    myListData,
+    setMyListData,
+    getMyListData
   }
 
   return (
