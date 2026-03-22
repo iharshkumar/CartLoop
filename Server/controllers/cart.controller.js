@@ -26,7 +26,7 @@ export const addToCartItemController = async (request, response) => {
         if (checkItemCart) {
             const newQty = checkItemCart.quantity + (quantity || 1);
             const newSubTotal = checkItemCart.price * newQty;
-            
+
             const updateCartItem = await CartProductModel.findOneAndUpdate(
                 { _id: checkItemCart._id },
                 { quantity: newQty, subTotal: newSubTotal },
@@ -187,6 +187,28 @@ export const deleteCartItemQtyController = async (request, response) => {
         })
 
 
+    } catch (error) {
+        return response.status(500).json({
+            message: error.message || error,
+            error: true,
+            success: false
+        })
+    }
+}
+
+export const emptyCartController = async (request, response) => {
+    try {
+        const userId = request.userId
+
+        await CartProductModel.deleteMany({
+            userId: userId
+        })
+
+        return response.status(200).json({
+            message: "Cart emptied successfully",
+            success: true,
+            error: false
+        })
     } catch (error) {
         return response.status(500).json({
             message: error.message || error,
