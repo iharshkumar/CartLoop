@@ -78,7 +78,7 @@ const Checkout = () => {
             return response?.data?.id;
 
         } catch (error) {
-            console.error("❌ PayPal createOrder error:", error);
+            console.error("PayPal createOrder error:", error);
             throw error;
         }
     };
@@ -88,7 +88,6 @@ const Checkout = () => {
             const user = userDataRef.current;
             const info = {
                 userId: user?._id,
-                // ✅ Map subTotal before sending
                 products: cartDataRef.current?.map(p => ({
                     ...p,
                     subTotal: p.price * p.quantity
@@ -123,7 +122,6 @@ const Checkout = () => {
             }
 
         } catch (error) {
-            console.error("❌ PayPal capture error:", error);
             const errorDetail = error.response?.data?.message;
             if (errorDetail && errorDetail.includes("INSTRUMENT_DECLINED")) {
                 return actions.restart();
@@ -292,7 +290,6 @@ const Checkout = () => {
                                     <BsFillBagFill className='text-[14px]' /> Checkout
                                 </Button>
 
-                                {/* ✅ PayPal Buttons */}
                                 <PayPalButtons
                                     style={{
                                         layout: "vertical",
@@ -302,10 +299,10 @@ const Checkout = () => {
                                         height: 45,
                                         tagline: false
                                     }}
+                                    fundingSource="paypal"
                                     createOrder={createPaypalOrder}
                                     onApprove={(data, actions) => onApprovePayment(data, actions)}
                                     onError={(err) => {
-                                        console.error("PayPal Error:", err);
                                         context?.alertBox("error", "PayPal payment failed!");
                                         navigate("/orders/failed");
                                     }}

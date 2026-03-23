@@ -76,7 +76,7 @@ function getPayPalClient() {
         )
         : new paypal.core.SandboxEnvironment(
             process.env.PAYPAL_CLIENT_ID_TEST,
-            process.env.PAYPAL_CLIENT_SECRET_TEST  // ✅ Fixed variable name
+            process.env.PAYPAL_CLIENT_SECRET_TEST
         );
     return new paypal.core.PayPalHttpClient(environment);
 }
@@ -156,7 +156,7 @@ export const captureOrderPaypalController = async (request, response) => {
             userId: request.body.userId,
             products: request.body.products.map(p => ({
                 ...p,
-                subTotalAmt: p.subTotalAmt || p.subTotal || (p.price * p.quantity) // ✅ Fixed
+                subTotalAmt: p.subTotalAmt || p.subTotal || (p.price * p.quantity)
             })),
             paymentId: request.body.paymentId,
             payment_status: captureData.result.status,

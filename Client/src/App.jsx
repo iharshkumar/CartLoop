@@ -111,7 +111,6 @@ function App() {
 
 
   const addToCart = async (product, userId, quantity, variations = {}) => {
-    //console.log(product)
     if (userId === undefined) {
       alertBox("error", "Please login to add product to cart");
       return false;
@@ -227,9 +226,10 @@ function App() {
   return (
     <>
       <PayPalScriptProvider options={{
-        clientId: import.meta.env.VITE_APP_PAYPAL_CLIENT_ID,
+        "client-id": import.meta.env.VITE_APP_PAYPAL_CLIENT_ID,
         currency: "USD",
-        intent: "capture"
+        intent: "capture",
+        "buyer-country": "US"
       }}>
         <BrowserRouter>
           <MyContext.Provider value={values}>
