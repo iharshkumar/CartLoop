@@ -675,3 +675,7 @@ header {
 .MuiCircularProgress-root {
   color: #ff5252 !important;
 }
+
+.paypal-button-container {
+  width: 100% !important;
+}

@@ -19,6 +19,9 @@ import MyList from "./Pages/MyList/index.jsx";
 import Orders from "./Pages/Orders";
 import { fetchDataFromApi, postData, editData } from "./utils/api.js";
 import Address from "./Pages/MyAccount/address.jsx";
+import OrderSuccess from "./Pages/Orders/success.jsx";
+import OrderFailed from "./Pages/Orders/failed.jsx";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js" // ✅ Add this
 
 const alertBox = (type, msg) => {
   if (type === "success") {
@@ -223,47 +226,53 @@ function App() {
 
   return (
     <>
-      <BrowserRouter>
-        <MyContext.Provider value={values}>
-          <Header />
-          <Routes>
-            {isLogin &&
-              <>
-                <Route path={'/'} exact={true} element={<Home />} />
-                <Route path={'/products'} exact={true} element={<ProductListing />} />
-                <Route path={'/product/:id'} exact={true} element={<ProductDetails />} />
-                <Route path={'/login'} exact={true} element={<Login />} />
-                <Route path={'/register'} exact={true} element={<Register />} />
-                <Route path={'/cart'} exact={true} element={<CartPage />} />
-                <Route path={'/verify'} exact={true} element={<Verify />} />
-                <Route path={'/forgot-password'} exact={true} element={<ForgotPassword />} />
-                <Route path={'/checkout'} exact={true} element={<Checkout />} />
-                <Route path={'/my-account'} exact={true} element={<MyAccount />} />
-                <Route path={'/my-list'} exact={true} element={<MyList />} />
-                <Route path={'/my-orders'} exact={true} element={<Orders />} />
-                <Route path={'/address'} exact={true} element={<Address />} />
-              </>
-            }
-            {!isLogin &&
-              <>
-                <Route path={'/'} exact={true} element={<Home />} />
-                <Route path={'/products'} exact={true} element={<ProductListing />} />
-                <Route path={'/product/:id'} exact={true} element={<ProductDetails />} />
-                <Route path={'/login'} exact={true} element={<Login />} />
-                <Route path={'/register'} exact={true} element={<Register />} />
-                <Route path={'/cart'} exact={true} element={<CartPage />} />
-                <Route path={'/verify'} exact={true} element={<Verify />} />
-                <Route path={'/forgot-password'} exact={true} element={<ForgotPassword />} />
-                <Route path={'/checkout'} exact={true} element={<Checkout />} />
-                <Route path={'/my-account'} exact={true} element={<Home />} />
-                <Route path={'/my-list'} exact={true} element={<Home />} />
-                <Route path={'/my-orders'} exact={true} element={<Home />} />
-              </>
-            }
-          </Routes>
-          <Footer />
-        </MyContext.Provider>
-      </BrowserRouter>
+      <PayPalScriptProvider options={{
+        clientId: import.meta.env.VITE_APP_PAYPAL_CLIENT_ID,
+        currency: "USD",
+        intent: "capture"
+      }}>
+        <BrowserRouter>
+          <MyContext.Provider value={values}>
+            <Header />
+            <Routes>
+              {isLogin &&
+                <>
+                  <Route path={'/'} exact={true} element={<Home />} />
+                  <Route path={'/products'} exact={true} element={<ProductListing />} />
+                  <Route path={'/product/:id'} exact={true} element={<ProductDetails />} />
+                  <Route path={'/login'} exact={true} element={<Login />} />
+                  <Route path={'/register'} exact={true} element={<Register />} />
+                  <Route path={'/cart'} exact={true} element={<CartPage />} />
+                  <Route path={'/verify'} exact={true} element={<Verify />} />
+                  <Route path={'/forgot-password'} exact={true} element={<ForgotPassword />} />
+                  <Route path={'/checkout'} exact={true} element={<Checkout />} />
+                  <Route path={'/my-account'} exact={true} element={<MyAccount />} />
+                  <Route path={'/my-list'} exact={true} element={<MyList />} />
+                  <Route path={'/my-orders'} exact={true} element={<Orders />} />
+                  <Route path={'/orders/success'} exact={true} element={<OrderSuccess />} />
+                  <Route path={'/orders/failed'} exact={true} element={<OrderFailed />} />
+                  <Route path={'/address'} exact={true} element={<Address />} />
+                </>
+              }
+              {!isLogin &&
+                <>
+                  <Route path={'/'} exact={true} element={<Home />} />
+                  <Route path={'/products'} exact={true} element={<ProductListing />} />
+                  <Route path={'/product/:id'} exact={true} element={<ProductDetails />} />
+                  <Route path={'/login'} exact={true} element={<Login />} />
+                  <Route path={'/register'} exact={true} element={<Register />} />
+                  <Route path={'/cart'} exact={true} element={<CartPage />} />
+                  <Route path={'/verify'} exact={true} element={<Verify />} />
+                  <Route path={'/forgot-password'} exact={true} element={<ForgotPassword />} />
+                  <Route path={'/checkout'} exact={true} element={<Checkout />} />
+                  <Route path={'/my-account'} exact={true} element={<Home />} />
+                </>
+              }
+            </Routes>
+            <Footer />
+          </MyContext.Provider>
+        </BrowserRouter>
+      </PayPalScriptProvider>
 
       <Toaster />
 

@@ -67,9 +67,11 @@ const CartPage = () => {
                             <span className='text-red-500 font-bold'>&#x20b9;{context?.cartData?.reduce((total, item) => total + item?.subTotal, 0).toLocaleString("en-IN")}</span>
                         </p>
                         <br />
-                        <Button className='btn-org btn-lg w-full flex gap-2'><BsFillBagFill className='text-[14px]' />
-                            Checkout
-                        </Button>
+                        <Link to="/checkout">
+                            <Button className='btn-org btn-lg w-full flex gap-2'><BsFillBagFill className='text-[14px]' />
+                                Checkout
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </div>
