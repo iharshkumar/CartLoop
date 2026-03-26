@@ -24,16 +24,15 @@ export async function uploadBannerV2Images(request, response) {
         };
 
         for (let i = 0; i < request?.files?.length; i++) {
+            const file = request.files[i];
+            const dataUri = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
             await cloudinary.uploader.upload(
-                image[i].path,
+                dataUri,
                 options,
                 function (error, result) {
-                    if (error) {
-                        console.error(error);
-                        return;
+                    if (result) {
+                        imagesArr.push(result.secure_url);
                     }
-                    imagesArr.push(result.secure_url);
-                    fs.unlinkSync(`uploads/${request.files[i].filename}`)
                 }
             )
         }

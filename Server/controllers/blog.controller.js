@@ -25,15 +25,15 @@ export async function uploadImages(request, response) {
         };
 
         for (let i = 0; i < request?.files?.length; i++) {
-
-
-            const img = await cloudinary.uploader.upload(
-                image[i].path,
+            const file = request.files[i];
+            const dataUri = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+            await cloudinary.uploader.upload(
+                dataUri,
                 options,
                 function (error, result) {
-                    console.log(result)
-                    imagesArr.push(result.secure_url);
-                    fs.unlinkSync(`uploads/${request.files[i].filename}`)
+                    if (result) {
+                        imagesArr.push(result.secure_url);
+                    }
                 }
             )
         }

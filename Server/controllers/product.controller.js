@@ -37,17 +37,14 @@ export async function uploadImages(request, response) {
 
         for (let i = 0; i < files.length; i++) {
             try {
-                const result = await cloudinary.uploader.upload(files[i].path, options);
+                const file = files[i];
+                const dataUri = `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
+                const result = await cloudinary.uploader.upload(dataUri, options);
                 if (result && result.secure_url) {
                     imagesArr.push(result.secure_url);
                 }
             } catch (uploadError) {
-                console.error(`Error uploading file ${files[i].filename}:`, uploadError);
-            } finally {
-                // Ensure local file is deleted even if upload fails
-                if (fs.existsSync(files[i].path)) {
-                    fs.unlinkSync(files[i].path);
-                }
+                console.error(`Error uploading file ${files[i].fieldname}:`, uploadError);
             }
         }
 
