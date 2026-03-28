@@ -17,7 +17,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { MyContext } from '../../App';
 import { fetchDataFromApi } from '../../utils/api';
 import SearchBox from '../../Components/SearchBox';
@@ -74,9 +74,23 @@ const Dashboard = () => {
     }
   }
 
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [orderPage, setOrderPage] = useState(0);
+  const [orderRowsPerPage, setOrderRowsPerPage] = useState(10);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [ordersData, setOrdersData] = useState([]);
+  const [productsFilterData, setProductsFilterData] = useState([]);
+  const [totalOrdersData, setTotalOrdersData] = useState([]);
+  const [searchProductQuery, setSearchProductQuery] = useState('');
+  const [totalProductsData, setTotalProductsData] = useState([]);
+  const [allReviews, setAllReviews] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [ordersCount, setOrdersCount] = useState(0);
+  const [chartData, setChartData] = useState([]);
+  const [activeChart, setActiveChart] = useState("users");
+  const [year, setYear] = useState(new Date().getFullYear());
   //const [categoryFilterVal, setcategoryFilterVal] = React.useState('');
 
   const [chart1Data, setChart1Data] = useState([
@@ -155,9 +169,83 @@ const Dashboard = () => {
   ]);
 
   useEffect(() => {
-    fetchDataFromApi("/api/order/order-list").then((res) => {
+    fetchDataFromApi(`/api/order/order-list?page=${orderPage + 1}&limit=${orderRowsPerPage}`).then((res) => {
       if (res?.error === false) {
         setOrders(res?.data)
+        setOrdersData(res?.data)
+        setTotalOrders(res?.total)
+      }
+    })
+    fetchDataFromApi(`/api/order/order-list`).then((res) => {
+      if (res?.error === false) {
+        setTotalOrdersData(res?.data)
+      }
+    })
+    fetchDataFromApi(`/api/order/count`).then((res) => {
+      if (res?.error === false) {
+        setOrdersCount(res?.count)
+      }
+    })
+  }, [orderPage, orderRowsPerPage])
+
+  useEffect(() => {
+    setOrderPage(0);
+    if (searchQuery !== "") {
+      const filteredOrders = totalOrdersData?.filter((order) =>
+        order?._id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order?.userId?.includes(searchQuery.toLowerCase()) ||
+        order?.userId?.email?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order?.order_status?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order?.totalAmt?.toString().toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order?.delivery_address?.fullName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order?.createdAt?.toString().includes(searchQuery)
+      )
+      setOrdersData(filteredOrders)
+      console.log(filteredOrders)
+    }
+    else {
+      fetchDataFromApi(`/api/order/order-list?page=${orderPage + 1}&limit=${orderRowsPerPage}`).then((res) => {
+        if (res?.error === false) {
+          setOrders(res?.data)
+          setOrdersData(res?.data)
+          setTotalOrders(res?.total)
+        }
+      })
+    }
+  }, [searchQuery])
+
+
+  useEffect(() => {
+    setPage(0);
+    if (searchProductQuery !== "") {
+      const filteredProducts = totalProductsData?.filter((product) =>
+        product?.name?.toLowerCase().includes(searchProductQuery.toLowerCase()) ||
+        product?.catName?.toLowerCase().includes(searchProductQuery.toLowerCase()) ||
+        product?.subCat?.toLowerCase().includes(searchProductQuery.toLowerCase()) ||
+        product?.brand?.toLowerCase().includes(searchProductQuery.toLowerCase()) ||
+        product?.price?.toString().toLowerCase().includes(searchProductQuery.toLowerCase()) ||
+        product?.oldPrice?.toString().toLowerCase().includes(searchProductQuery.toLowerCase()) ||
+        product?.countInStock?.toString().toLowerCase().includes(searchProductQuery.toLowerCase()) ||
+        product?.createdAt?.toString().includes(searchProductQuery)
+      )
+      setProductsFilterData(filteredProducts)
+    }
+    else {
+      setProductsFilterData(productData)
+    }
+  }, [searchProductQuery])
+
+  useEffect(() => {
+    getTotalUsersByYear();
+    fetchDataFromApi(`/api/user/getAllUsers`).then((res) => {
+      if (res?.error === false) {
+        setUsers(res?.users)
+      }
+    })
+
+    fetchDataFromApi(`/api/user/getAllReviews`).then((res) => {
+      if (res?.error === false) {
+        setAllReviews(res?.reviews)
       }
     })
   }, [])
@@ -172,9 +260,18 @@ const Dashboard = () => {
     setPage(newPage);
   };
 
+  const handleChangeOrderPage = (event, newPage) => {
+    setOrderPage(newPage);
+  };
+
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleChangeOrderRowsPerPage = (event) => {
+    setOrderRowsPerPage(+event.target.value);
+    setOrderPage(0);
   };
 
   useEffect(() => {
@@ -194,7 +291,8 @@ const Dashboard = () => {
           }
           setTimeout(() => {
             setProductData(productArr);
-            // console.log(productArr) 
+            setTotalProductsData(productArr);
+            setProductsFilterData(productArr);
           }, 500);
         }
       })
@@ -213,6 +311,8 @@ const Dashboard = () => {
     fetchDataFromApi(`/api/product/getAllProductsByCatId/${event.target.value}`).then((res) => {
       if (res?.error === false) {
         setProductData(res?.data)
+        setTotalProductsData(res?.data)
+        setProductsFilterData(res?.data)
       }
     })
       .finally(() => {
@@ -228,6 +328,8 @@ const Dashboard = () => {
     fetchDataFromApi(`/api/product/getAllProductsBySubCatId/${event.target.value}`).then((res) => {
       if (res?.error === false) {
         setProductData(res?.data)
+        setTotalProductsData(res?.data)
+        setProductsFilterData(res?.data)
       }
     })
       .finally(() => {
@@ -243,20 +345,23 @@ const Dashboard = () => {
     fetchDataFromApi(`/api/product/getAllProductsByThirdLevelCat/${event.target.value}`).then((res) => {
       if (res?.error === false) {
         setProductData(res?.data)
+        setTotalProductsData(res?.data)
+        setProductsFilterData(res?.data)
       }
     })
       .finally(() => {
         setIsLoading(false);
       });
   };
+
   const handleSelectAll = (e) => {
     const isChecked = e.target.checked;
 
-    const updatedItems = productData.map((item) => ({
+    const updatedItems = productsFilterData.map((item) => ({
       ...item,
       checked: isChecked,
     }));
-    setProductData(updatedItems);
+    setProductsFilterData(updatedItems);
 
     if (isChecked) {
       const ids = updatedItems.map((item) => item._id).sort((a, b) => a - b)
@@ -267,10 +372,10 @@ const Dashboard = () => {
   }
 
   const handleCheckboxChange = (e, id, index) => {
-    const updatedItems = productData.map((item) =>
+    const updatedItems = productsFilterData.map((item) =>
       item._id === id ? { ...item, checked: !item.checked } : item
     );
-    setProductData(updatedItems);
+    setProductsFilterData(updatedItems);
 
     const selectedIds = updatedItems
       .filter((item) => item.checked)
@@ -278,6 +383,84 @@ const Dashboard = () => {
       .sort((a, b) => a - b);
     setSortedIds(selectedIds);
   };
+
+  const getTotalUsersByYear = () => {
+    fetchDataFromApi(`/api/order/users`).then((res) => {
+      if (res?.error === true) {
+        console.error("Error fetching users:", res.message);
+        return;
+      }
+      const users = [];
+      if (Array.isArray(res?.TotalUsers)) {
+        res.TotalUsers.forEach((item) => {
+          users.push({
+            name: item?.name,
+            TotalUsers: parseInt(item?.TotalUsers || 0)
+          })
+        });
+      }
+
+      setActiveChart("users");
+      setChartData((prevData) => {
+        let newData = [...prevData];
+        if (newData.length === 0) {
+          newData = users;
+        } else {
+          users.forEach((u) => {
+            const index = newData.findIndex((d) => d.name === u.name);
+            if (index > -1) {
+              newData[index] = { ...newData[index], TotalUsers: u.TotalUsers };
+            } else {
+              newData.push(u);
+            }
+          });
+        }
+        return newData.sort((a, b) => {
+          const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+          return months.indexOf(a.name) - months.indexOf(b.name);
+        });
+      });
+    })
+  }
+
+  const getTotalSalesByYear = () => {
+    fetchDataFromApi(`/api/order/sales`).then((res) => {
+      if (res?.error === true) {
+        console.error("Error fetching sales:", res.message);
+        return;
+      }
+      const sales = [];
+      if (Array.isArray(res?.monthlySales)) {
+        res.monthlySales.forEach((item) => {
+          sales.push({
+            name: item?.name,
+            TotalSales: parseInt(item?.TotalSales || 0)
+          })
+        });
+      }
+
+      setActiveChart("sales");
+      setChartData((prevData) => {
+        let newData = [...prevData];
+        if (newData.length === 0) {
+          newData = sales;
+        } else {
+          sales.forEach((s) => {
+            const index = newData.findIndex((d) => d.name === s.name);
+            if (index > -1) {
+              newData[index] = { ...newData[index], TotalSales: s.TotalSales };
+            } else {
+              newData.push(s);
+            }
+          });
+        }
+        return newData.sort((a, b) => {
+          const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+          return months.indexOf(a.name) - months.indexOf(b.name);
+        });
+      });
+    })
+  }
 
 
 
@@ -310,7 +493,18 @@ const Dashboard = () => {
 
         <img src="/shopDashboard.webp" className='w-[250px]' />
       </div>
-      <DashboardBoxes />
+
+      {
+        productData?.length !== 0 && users?.length !== 0 && allReviews?.length !== 0 && (
+          <DashboardBoxes
+            orders={ordersCount}
+            products={productData?.length}
+            users={users?.length}
+            reviews={allReviews?.length}
+            category={context?.catData?.length}
+          />
+        )
+      }
 
 
       {/*Tailwind CSS Table*/}
@@ -993,6 +1187,7 @@ const Dashboard = () => {
         <div className='flex items-center w-full !px-5 justify-between gap-4 !mb-2'>
           <div className='col w-[15%] '>
             <h4 className='font-[600] text-[12px] !mb-2'>Category by</h4>
+
             {
               context?.catData.length !== 0 &&
               <Select
@@ -1094,7 +1289,11 @@ const Dashboard = () => {
           </div>
 
           <div className='col w-[20%] !ml-auto'>
-            <SearchBox />
+            <SearchBox
+              searchQuery={searchProductQuery}
+              setSearchQuery={setSearchProductQuery}
+              setPageOrder={() => setPage(0)}
+            />
           </div>
 
 
@@ -1109,7 +1308,7 @@ const Dashboard = () => {
                 <TableCell >
                   <Checkbox size='small'
                     onChange={handleSelectAll}
-                    checked={productData?.length > 0 ? productData.every((item) => item.checked) : false} />
+                    checked={productsFilterData?.length > 0 ? productsFilterData.every((item) => item.checked) : false} />
                 </TableCell>
 
                 {columns.map((column) => (
@@ -1127,7 +1326,7 @@ const Dashboard = () => {
 
 
               {
-                isLoading === false ? productData?.length !== 0 && productData?.slice(
+                isLoading === false ? productsFilterData?.length !== 0 && productsFilterData?.slice(
                   page * rowsPerPage,
                   page * rowsPerPage + rowsPerPage
                 )?.map((product, index) => {
@@ -1249,7 +1448,7 @@ const Dashboard = () => {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={productData?.length}
+          count={productsFilterData?.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -1260,12 +1459,19 @@ const Dashboard = () => {
 
       {/*Order Section*/}
       <div className='card !mt-5 !my-2 !shadow-md sm:rounded-lg !bg-white' >
-        <div className='flex items-center justify-between !px-5 !py-5'>
+        <div className='flex items-center justify-between !px-5 !py-5 '>
           <h1 className='text-[18px] font-[600]'>Recent Orders</h1>
+          <div className="w-[25%]">
+            <SearchBox
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              setPageOrder={() => setOrderPage(0)}
+            />
+          </div>
         </div>
 
 
-        <div className="relative overflow-x-auto !mt-5 bg-white !shadow-xs rounded-md !border !border-[rgba(0,0,0,0.1)]">
+        <div className="relative overflow-x-auto bg-white !shadow-xs rounded-md !border !border-[rgba(0,0,0,0.1)]">
           <table className="w-full text-sm text-left rtl:text-right text-body border-collapse">
             <thead className="text-sm text-body bg-[#f1f1f1] !border-b !border-[rgba(0,0,0,0.1)]">
               <tr>
@@ -1311,152 +1517,165 @@ const Dashboard = () => {
             <tbody>
 
               {
-                orders?.length !== 0 && orders?.map((order, index) => {
-                  return (
-                    <>
-                      <tr className="!bg-white !border-b !border-[rgba(0,0,0,0.1)] hover:!bg-gray-50">
-                        <td className="!px-6 !py-4">
-                          <Button className='!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-[#f1f1f1]'
-                            onClick={() => isShowOrderedProduct(index)}>
-                            {
-                              isOpenOrderedProduct === index ?
-                                <FaAngleUp className='text-[16px] text-[rgba(0,0,0,0.7)]' /> :
-                                <FaAngleDown className='text-[16px] text-[rgba(0,0,0,0.7)]' />
-                            }
-                          </Button>
-                        </td>
+                Array.isArray(ordersData) && ordersData?.length !== 0 &&
+                (searchQuery !== "" ?
+                  ordersData?.slice(orderPage * orderRowsPerPage, orderPage * orderRowsPerPage + orderRowsPerPage) :
+                  ordersData)?.map((order, index) => {
+                    return (
+                      <>
+                        <tr className="!bg-white !border-b !border-[rgba(0,0,0,0.1)] hover:!bg-gray-50">
+                          <td className="!px-6 !py-4">
+                            <Button className='!w-[35px] !h-[35px] !min-w-[35px] !rounded-full !bg-[#f1f1f1]'
+                              onClick={() => isShowOrderedProduct(index)}>
+                              {
+                                isOpenOrderedProduct === index ?
+                                  <FaAngleUp className='text-[16px] text-[rgba(0,0,0,0.7)]' /> :
+                                  <FaAngleDown className='text-[16px] text-[rgba(0,0,0,0.7)]' />
+                              }
+                            </Button>
+                          </td>
 
-                        <td className="!px-6 !py-4">
-                          <span className='text-red-500'>{order?._id}</span>
-                        </td>
+                          <td className="!px-6 !py-4">
+                            <span className='text-red-500'>{order?._id}</span>
+                          </td>
 
-                        <td className="!px-6 !py-4">
-                          <span className='text-red-500'>{order?.paymentId}</span>
-                        </td>
+                          <td className="!px-6 !py-4">
+                            <span className='text-red-500'>{order?.paymentId}</span>
+                          </td>
 
-                        <td className="!px-6 !py-4 whitespace-nowrap">
-                          {order?.delivery_address?.fullName}
-                        </td>
+                          <td className="!px-6 !py-4 whitespace-nowrap">
+                            {order?.delivery_address?.fullName}
+                          </td>
 
-                        <td className="!px-6 !py-4">
-                          {order?.delivery_address?.mobile}
-                        </td>
-                        <td className="!px-6 !py-4">
-                          <span className='block w-[400px]'>
-                            {order?.delivery_address ? (
-                              `${order?.delivery_address?.address_line1}, ${order?.delivery_address?.city}, ${order?.delivery_address?.state}, ${order?.delivery_address?.country}`
-                            ) : (
-                              <span className='text-gray-400 italic'>No specific delivery address found</span>
-                            )}
-                          </span>
-                        </td>
+                          <td className="!px-6 !py-4">
+                            {order?.delivery_address?.mobile}
+                          </td>
+                          <td className="!px-6 !py-4">
+                            <span className='block w-[400px]'>
+                              {order?.delivery_address ? (
+                                `${order?.delivery_address?.address_line1}, ${order?.delivery_address?.city}, ${order?.delivery_address?.state}, ${order?.delivery_address?.country}`
+                              ) : (
+                                <span className='text-gray-400 italic'>No specific delivery address found</span>
+                              )}
+                            </span>
+                          </td>
 
-                        <td className="!px-6 !py-4">
-                          {order?.delivery_address?.pincode || "N/A"}
-                        </td>
-                        <td className="!px-6 !py-4">
-                          {order?.totalAmt}
-                        </td>
+                          <td className="!px-6 !py-4">
+                            {order?.delivery_address?.pincode || "N/A"}
+                          </td>
+                          <td className="!px-6 !py-4">
+                            {order?.totalAmt}
+                          </td>
 
-                        <td className="!px-6 !py-4">
-                          {order?.userId?.email}
-                        </td>
+                          <td className="!px-6 !py-4">
+                            {order?.userId?.email}
+                          </td>
 
-                        <td className="!px-6 !py-4">
-                          <span className='text-red-500'>{order?.userId?._id}</span>
-                        </td>
+                          <td className="!px-6 !py-4">
+                            <span className='text-red-500'>{order?.userId?._id}</span>
+                          </td>
 
-                        <td className="!px-6 !py-4">
-                          <Badge status={order?.order_status} />
-                        </td>
+                          <td className="!px-6 !py-4">
+                            <Badge status={order?.order_status} />
+                          </td>
 
-                        <td className="!px-6 !py-4 whitespace-nowrap">
-                          {new Date(order?.createdAt).toLocaleDateString()}
-                        </td>
-                      </tr>
-
-
-                      {
-                        isOpenOrderedProduct === index && (
-                          <tr>
-                            <td className='!pl-25 !py-4' colSpan="12">
-                              <div className="relative overflow-x-auto bg-white !shadow-xs rounded-md !border !border-[rgba(0,0,0,0.1)]">
-                                <table className="w-full text-sm text-left rtl:text-right text-body border-collapse">
-                                  <thead className="text-sm text-body bg-[#f1f1f1] !border-b !border-[rgba(0,0,0,0.1)]">
-                                    <tr>
-                                      <th scope="col" className="!px-6 !py-3 font-medium whitespace-nowrap">
-                                        Product Id
-                                      </th>
-                                      <th scope="col" className="!px-6 !py-3 font-medium whitespace-nowrap">
-                                        Product Details
-                                      </th>
-
-                                      <th scope="col" className="!px-6 !py-3 font-medium whitespace-nowrap">
-                                        Image
-                                      </th>
-                                      <th scope="col" className="!px-6 !py-3 font-medium whitespace-nowrap">
-                                        Quantity
-                                      </th>
-                                      <th scope="col" className="!px-6 !py-3 font-medium whitespace-nowrap">
-                                        Price
-                                      </th>
-                                      <th scope="col" className="!px-6 !py-3 font-medium whitespace-nowrap">
-                                        Sub Total
-                                      </th>
+                          <td className="!px-6 !py-4 whitespace-nowrap">
+                            {new Date(order?.createdAt).toLocaleDateString()}
+                          </td>
+                        </tr>
 
 
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {
-                                      order?.products?.map((product, pIndex) => (
-                                        <tr key={pIndex} className="!bg-white !border-b !border-[rgba(0,0,0,0.1)] hover:!bg-gray-50">
-                                          <td className="!px-6 !py-4">
-                                            <span className='text-gray-600'>{product?.productId}</span>
-                                          </td>
+                        {
+                          isOpenOrderedProduct === index && (
+                            <tr>
+                              <td className='!pl-25 !py-4' colSpan="12">
+                                <div className="relative overflow-x-auto bg-white !shadow-xs rounded-md !border !border-[rgba(0,0,0,0.1)]">
+                                  <table className="w-full text-sm text-left rtl:text-right text-body border-collapse">
+                                    <thead className="text-sm text-body bg-[#f1f1f1] !border-b !border-[rgba(0,0,0,0.1)]">
+                                      <tr>
+                                        <th scope="col" className="!px-6 !py-3 font-medium whitespace-nowrap">
+                                          Product Id
+                                        </th>
+                                        <th scope="col" className="!px-6 !py-3 font-medium whitespace-nowrap">
+                                          Product Details
+                                        </th>
 
-                                          <td className="!px-6 !py-4">
-                                            <span className='text-gray-600'>{product?.productTitle?.slice(0, 20)}...</span>
-                                          </td>
+                                        <th scope="col" className="!px-6 !py-3 font-medium whitespace-nowrap">
+                                          Image
+                                        </th>
+                                        <th scope="col" className="!px-6 !py-3 font-medium whitespace-nowrap">
+                                          Quantity
+                                        </th>
+                                        <th scope="col" className="!px-6 !py-3 font-medium whitespace-nowrap">
+                                          Price
+                                        </th>
+                                        <th scope="col" className="!px-6 !py-3 font-medium whitespace-nowrap">
+                                          Sub Total
+                                        </th>
 
-                                          <td className="!px-6 !py-4 whitespace-nowrap">
-                                            <img src={product?.image}
-                                              className='w-[40px] h-[40px] object-cover whitespace-nowrap !rounded-md' />
-                                          </td>
 
-                                          <td className="!px-6 !py-4">
-                                            {product?.quantity}
-                                          </td>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {
+                                        order?.products?.map((product, pIndex) => (
+                                          <tr key={pIndex} className="!bg-white !border-b !border-[rgba(0,0,0,0.1)] hover:!bg-gray-50">
+                                            <td className="!px-6 !py-4">
+                                              <span className='text-gray-600'>{product?.productId}</span>
+                                            </td>
 
-                                          <td className="!px-6 !py-4">
-                                            <span className='block'>{(product?.price)?.toLocaleString('en-US', {
-                                              style: 'currency',
-                                              currency: 'INR',
-                                            })}</span>
-                                          </td>
+                                            <td className="!px-6 !py-4">
+                                              <span className='text-gray-600'>{product?.productTitle?.slice(0, 20)}...</span>
+                                            </td>
 
-                                          <td className="!px-6 !py-4">
-                                            {(product?.price * product?.quantity)?.toLocaleString('en-US', {
-                                              style: 'currency',
-                                              currency: 'INR',
-                                            })}
-                                          </td>
-                                        </tr>
-                                      ))
-                                    }
-                                  </tbody>
-                                </table>
-                              </div>
-                            </td>
-                          </tr>
-                        )}
-                    </>
-                  )
-                })
+                                            <td className="!px-6 !py-4 whitespace-nowrap">
+                                              <img src={product?.image}
+                                                className='w-[40px] h-[40px] object-cover whitespace-nowrap !rounded-md' />
+                                            </td>
+
+                                            <td className="!px-6 !py-4">
+                                              {product?.quantity}
+                                            </td>
+
+                                            <td className="!px-6 !py-4">
+                                              <span className='block'>{(product?.price)?.toLocaleString('en-US', {
+                                                style: 'currency',
+                                                currency: 'INR',
+                                              })}</span>
+                                            </td>
+
+                                            <td className="!px-6 !py-4">
+                                              {(product?.price * product?.quantity)?.toLocaleString('en-US', {
+                                                style: 'currency',
+                                                currency: 'INR',
+                                              })}
+                                            </td>
+                                          </tr>
+                                        ))
+                                      }
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                      </>
+                    )
+                  })
               }
             </tbody>
           </table>
         </div>
+
+        <TablePagination
+          rowsPerPageOptions={[10, 25, 100]}
+          component="div"
+          count={searchQuery !== "" ? ordersData?.length : totalOrders}
+          rowsPerPage={orderRowsPerPage}
+          page={orderPage}
+          onPageChange={handleChangeOrderPage}
+          onRowsPerPageChange={handleChangeOrderRowsPerPage}
+        />
 
 
       </div>
@@ -1468,13 +1687,19 @@ const Dashboard = () => {
         </div>
 
         <div className='flex items-center gap-5 !px-5 !py-4 !mb-2 !pt-1'>
-          <span className='flex items-center gap-3 text-[15px]'><span className='block w-[8px] h-[8px] rounded-full bg-green-500'></span>Total Users</span>
-          <span className='flex items-center gap-3 text-[15px]'><span className='block w-[8px] h-[8px] rounded-full bg-blue-500'></span>Total Sales</span>
+          <span className={`flex items-center gap-3 text-[15px] cursor-pointer ${activeChart === 'users' ? 'font-bold' : ''}`} onClick={getTotalUsersByYear}>
+            <span className='block w-[10px] h-[10px] rounded-full bg-green-500'></span>
+            Total Users
+          </span>
+          <span className={`flex items-center gap-3 text-[15px] cursor-pointer ${activeChart === 'sales' ? 'font-bold' : ''}`} onClick={getTotalSalesByYear}>
+            <span className='block w-[10px] h-[10px] rounded-full bg-blue-500'></span>
+            Total Sales
+          </span>
         </div>
 
         <ResponsiveContainer width="100%" height={400}>
-          <LineChart
-            data={chart1Data}
+          <BarChart
+            data={chartData}
             margin={{
               top: 10,
               right: 20,
@@ -1487,9 +1712,13 @@ const Dashboard = () => {
             <YAxis width="auto" tick={{ fontSize: 12 }} />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="TotalSales" stroke="#8884d8" activeDot={{ r: 8 }} strokeWidth={3} />
-            <Line type="monotone" dataKey="TotalUsers" stroke="#82ca9d" strokeWidth={3} />
-          </LineChart>
+            {activeChart === "sales" && (
+              <Bar dataKey="TotalSales" fill="#8884d8" radius={[4, 4, 0, 0]} />
+            )}
+            {activeChart === "users" && (
+              <Bar dataKey="TotalUsers" fill="#82ca9d" radius={[4, 4, 0, 0]} />
+            )}
+          </BarChart>
         </ResponsiveContainer>
       </div>
     </>
