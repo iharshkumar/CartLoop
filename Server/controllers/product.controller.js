@@ -3,6 +3,7 @@ import ProductModel from "../models/product.model.js";
 import ProductRAMSModel from "../models/productRAM.model.js";
 import productWEIGHTModel from "../models/productWEIGHT.model.js";
 import productSIZEModel from "../models/productSIZE.model.js";
+import ReviewModel from "../models/reviews.model.js";
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs";
 
@@ -758,10 +759,15 @@ export async function getProduct(request, response) {
             })
         }
 
+        const reviews = await ReviewModel.find({ productId: request.params.id });
+
         return response.status(200).json({
             error: false,
             success: true,
-            product: product
+            product: {
+                ...product._doc,
+                reviews: reviews
+            }
         })
     } catch (error) {
         return response.status(500).json({
