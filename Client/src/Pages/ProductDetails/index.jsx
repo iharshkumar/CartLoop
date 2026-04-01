@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { Link } from 'react-router-dom';
 import { ProductZoom } from '../../components/ProductZoom';
@@ -7,14 +7,15 @@ import ProductDetailsComponents from '../../components/ProductDetails';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { fetchDataFromApi } from '../../utils/api';
-import ProductLoading from '../../components/ProductLoading';
 import ProductsSlider from '../../components/ProductsSlider';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import Reviews from './addReview.jsx';
 import { useRef } from 'react';
+import { MyContext } from '../../App.jsx';
 
 export const ProductDetails = () => {
+    const context = useContext(MyContext);
     const [reviewCount, setReviewCount] = useState(0);
     const [activeTab, setActiveTab] = useState(0);
     const { id } = useParams();
@@ -89,7 +90,8 @@ export const ProductDetails = () => {
                     </Breadcrumbs>
                 </div>
             </div>
-            <section className='!bg-white !py-5' >
+
+            <section className='!bg-white !py-5'>
                 {
                     isLoading === true ?
                         <div className='flex items-center justify-center min-h-[300px]'>
@@ -97,17 +99,18 @@ export const ProductDetails = () => {
                         </div>
                         :
                         <>
-                            <div className='container flex gap-15 items-center'>
-                                <div className='productZoomContainer w-[30%] '>
+                            {/* Product zoom + details — stacked on mobile, side by side on desktop */}
+                            <div className='container flex flex-col md:flex-row gap-6 md:gap-10 items-start'>
+                                <div className='productZoomContainer w-full md:w-[38%]'>
                                     <ProductZoom images={productData?.images} />
                                 </div>
 
-                                <div className='productContent w-[70%] !pr-15 !pl=15'>
+                                <div className='productContent w-full md:w-[62%] !px-0 md:!pr-10'>
                                     <ProductDetailsComponents item={productData} reviewCount={reviewCount} gotoReviewSection={gotoReviewSection} />
                                 </div>
                             </div>
 
-
+                            {/* Description / Reviews tabs */}
                             <div className='container w-full !mt-8'>
                                 <div className='flex items-center gap-7 !mb-5'>
                                     <span className={`link text-[16px] cursor-pointer font-[500] ${activeTab === 0 && 'text-red-500'}`}
@@ -123,15 +126,14 @@ export const ProductDetails = () => {
 
                                 {
                                     activeTab === 0 &&
-                                    <div className='shadow-md w-full !py-5 !p-8 rounded-md'>
+                                    <div className='shadow-md w-full !py-5 !p-4 md:!p-8 rounded-md'>
                                         <p>{productData?.description}</p>
                                     </div>
                                 }
 
-
                                 {
                                     activeTab === 1 &&
-                                    <div className='shadow-md w-[80%] !py-5 !p-8 rounded-md'>
+                                    <div className='shadow-md w-full md:w-[80%] !py-5 !p-4 md:!p-8 rounded-md'>
                                         {
                                             productData?.length !== 0 &&
                                             <Reviews productId={productData?._id} setReviewCount={setReviewCount} />
@@ -140,10 +142,11 @@ export const ProductDetails = () => {
                                 }
                             </div>
 
+                            {/* Related Products */}
                             {
                                 relatedProductData?.length !== 0 &&
                                 <div className='container !pt-3'>
-                                    <h2 className='text-[20px] font-[600] !pb-5' style={{ paddingTop: '30px' }}>Related Products </h2>
+                                    <h2 className='text-[20px] font-[600] !pb-5' style={{ paddingTop: '30px' }}>Related Products</h2>
                                     <div className='flex flex-col gap-6 !pb-0'>
                                         <ProductsSlider items={6} data={relatedProductData} />
                                     </div>
@@ -152,8 +155,6 @@ export const ProductDetails = () => {
                         </>
                 }
             </section>
-
-
         </>
     )
 }

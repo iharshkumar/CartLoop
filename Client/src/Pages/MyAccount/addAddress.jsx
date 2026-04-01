@@ -247,8 +247,8 @@ const AddAddress = (props) => {
                 </div>
             </div>
 
-            <div className='flex items-center gap-5 !pb-5'>
-                <div className='col w-[50%]'>
+            <div className='flex flex-col sm:flex-row items-center gap-5 !pb-5'>
+                <div className='col w-full sm:w-[50%]'>
                     <TextField
                         className='w-full'
                         label="City"
@@ -260,7 +260,7 @@ const AddAddress = (props) => {
                     />
                 </div>
 
-                <div className='col w-[50%]'>
+                <div className='col w-full sm:w-[50%]'>
                     <TextField
                         className='w-full'
                         label="State"
@@ -273,8 +273,8 @@ const AddAddress = (props) => {
                 </div>
             </div>
 
-            <div className='flex items-center gap-5 !pb-5'>
-                <div className='col w-[50%]'>
+            <div className='flex flex-col sm:flex-row items-center gap-5 !pb-5'>
+                <div className='col w-full sm:w-[50%]'>
                     <TextField
                         className='w-full'
                         label="Pincode"
@@ -286,7 +286,7 @@ const AddAddress = (props) => {
                     />
                 </div>
 
-                <div className='col w-[50%]'>
+                <div className='col w-full sm:w-[50%]'>
                     <TextField
                         className='w-full'
                         label="Country"

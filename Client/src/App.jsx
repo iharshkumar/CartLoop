@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import './index.css'
+import './responsive.css'
 import Header from './components/Header/index.jsx';
 import Footer from './components/Footer/index.jsx';
 import Home from './Pages/Home';
@@ -23,6 +24,7 @@ import OrderSuccess from "./Pages/Orders/success.jsx";
 import OrderFailed from "./Pages/Orders/failed.jsx";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js" // ✅ Add this
 import SearchPage from "./Pages/Search/index.jsx";
+import CompareModal from "./components/CompareModal";
 
 const alertBox = (type, msg) => {
   if (type === "success") {
@@ -58,6 +60,31 @@ function App() {
   const [editId, setEditId] = useState(null);
   const [searchData, setSearchData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+  const [compareData, setCompareData] = useState([]);
+  const [isCompareModalOpen, setIsCompareModalOpen] = useState(false);
+
+  const addToCompare = (product) => {
+    const isDuplicate = compareData.some(item => item._id === product._id);
+    if (isDuplicate) {
+      alertBox("error", "Product is already added to compare!");
+      return;
+    }
+    if (compareData.length > 0 && compareData[0].catId !== product.catId) {
+      alertBox("error", "You can only compare products from the same category!");
+      return;
+    }
+    if (compareData.length >= 3) {
+      alertBox("error", "You can only compare up to 3 products!");
+      return;
+    }
+    setCompareData([...compareData, product]);
+    setIsCompareModalOpen(true);
+  };
+
+  const removeCompareItem = (id) => {
+    setCompareData(compareData.filter(item => item._id !== id));
+  };
 
   const handleOpenProductDetailsModal = (status, item) => {
     setOpenProductDetailsModal({
@@ -110,6 +137,16 @@ function App() {
         setCatData(res?.data)
       }
     })
+
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, [])
 
 
@@ -227,7 +264,15 @@ function App() {
     searchData,
     setSearchData,
     searchQuery,
-    setSearchQuery
+    setSearchQuery,
+    windowWidth,
+    setWindowWidth,
+    compareData,
+    setCompareData,
+    isCompareModalOpen,
+    setIsCompareModalOpen,
+    addToCompare,
+    removeCompareItem
   }
 
   return (
@@ -279,6 +324,7 @@ function App() {
               }
             </Routes>
             <Footer />
+            <CompareModal />
           </MyContext.Provider>
         </BrowserRouter>
       </PayPalScriptProvider>

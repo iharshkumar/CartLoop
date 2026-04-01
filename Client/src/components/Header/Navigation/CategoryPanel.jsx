@@ -12,6 +12,7 @@ import { CategoryCollapse } from '../../CategoryCollapse';
 const CategoryPanel = (props) => {
     const toggleDrawer = (newOpen) => () => {
         props.setIsOpenCatPanel(newOpen);
+        props.propsSetIsOpenCatPanel(newOpen);
     }
 
     const DrawerList = (
@@ -23,7 +24,7 @@ const CategoryPanel = (props) => {
             </h3>
 
             {
-                props?.data?.length !== 0 && <CategoryCollapse data={props?.data}/>
+                props?.data?.length !== 0 && <CategoryCollapse data={props?.data} />
             }
 
         </Box>

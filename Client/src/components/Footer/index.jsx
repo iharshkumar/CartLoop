@@ -21,195 +21,158 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import { ProductZoom } from "../ProductZoom/index.jsx";
 import ProductDetailsComponents from "../ProductDetails/index.jsx";
-import TextField from '@mui/material/TextField';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import CircularProgress from '@mui/material/CircularProgress';
 import AddAddress from '../../Pages/MyAccount/addAddress.jsx';
+import { Box } from '@mui/material';
 
 const Footer = () => {
     const context = useContext(MyContext)
 
     return (
         <>
-            <footer className='bg-white w-full border-t border-[rgba(0,0,0,0.1)] pt-12 md:pt-16' style={{ paddingTop: '50px' }}>
+            <footer className='bg-white w-full border-t border-[rgba(0,0,0,0.1)] !pt-12 md:!pt-16' style={{ paddingTop: '50px' }}>
                 <div className='container w-full'>
-                    <div className='flex flex-wrap items-center bg-white justify-center gap-6 md:gap-8 pb-8' style={{ paddingTop: '10px', paddingBottom: '20px' }}>
-                        <div className='col flex items-center justify-center flex-col group w-full sm:w-[35%] md:w-[18%] mb-4 md:mb-0'>
-                            <LiaShippingFastSolid className='text-[40px] transition-all duration-300 group-hover:!text-red-500 group-hover:-translate-y-1' />
-                            <h3 className='text-[16px] font-[600] mt-3'>
-                                Free Shipping
-                            </h3>
-                            <p className='text-[12px] font-[500]'>For all Orders Over $20</p>
+                    <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 md:gap-4 !pb-8 !pt-4 md:!pt-[10px]'>
+                        <div className='col flex items-center justify-center flex-col group text-center !p-4 rounded-2xl border border-gray-100 hover:border-red-100 hover:bg-red-50/40 transition-all duration-300'>
+                            <span className='w-[52px] h-[52px] flex items-center justify-center rounded-full bg-red-50 group-hover:bg-red-100 transition-all duration-300 !mb-3'>
+                                <LiaShippingFastSolid className='text-[26px] text-red-500 transition-all duration-300 group-hover:-translate-y-0.5' />
+                            </span>
+                            <h3 className='text-[13px] md:text-[14px] font-[700] leading-tight'>Free Shipping</h3>
+                            <p className='text-[11px] font-[400] text-gray-400 !mt-1 leading-snug'>For all Orders Over $30</p>
                         </div>
 
-                        <div className='col flex items-center justify-center flex-col group w-full sm:w-[35%] md:w-[18%] mb-4 md:mb-0'>
-                            <TbTruckReturn className='text-[40px] transition-all duration-300 group-hover:!text-red-500 group-hover:-translate-y-1' />
-                            <h3 className='text-[16px] font-[600] mt-3'>
-                                30 Days Returns
-                            </h3>
-                            <p className='text-[12px] font-[500]'>For an Exchange Product</p>
-                        </div>
-                        <div className='col flex items-center justify-center flex-col group w-full sm:w-[35%] md:w-[18%] mb-4 md:mb-0'>
-                            <IoWalletOutline className='text-[40px] transition-all duration-300 group-hover:!text-red-500 group-hover:-translate-y-1' />
-                            <h3 className='text-[16px] font-[600] mt-3'>
-                                Secured Payment
-                            </h3>
-                            <p className='text-[12px] font-[500]'>Payment Cards Accepted</p>
-                        </div>
-                        <div className='col flex items-center justify-center flex-col group w-full sm:w-[35%] md:w-[18%] mb-4 md:mb-0'>
-                            <LiaGiftSolid className='text-[40px] transition-all duration-300 group-hover:!text-red-500 group-hover:-translate-y-1' />
-                            <h3 className='text-[16px] font-[600] mt-3'>
-                                Special Gifts
-                            </h3>
-                            <p className='text-[12px] font-[500]'>Our First Product Order</p>
-                        </div>
-                        <div className='col flex items-center justify-center flex-col group w-full sm:w-[35%] md:w-[15%] mb-4 md:mb-0'>
-                            <BiSupport className='text-[40px] transition-all duration-300 group-hover:!text-red-500 group-hover:-translate-y-1' />
-                            <h3 className='text-[16px] font-[600] mt-3'>
-                                Support 24/7
-                            </h3>
-                            <p className='text-[12px] font-[500]'>Contact us Anytime</p>
+                        <div className='col flex items-center justify-center flex-col group text-center !p-4 rounded-2xl border border-gray-100 hover:border-red-100 hover:bg-red-50/40 transition-all duration-300'>
+                            <span className='w-[52px] h-[52px] flex items-center justify-center rounded-full bg-red-50 group-hover:bg-red-100 transition-all duration-300 !mb-3'>
+                                <TbTruckReturn className='text-[26px] text-red-500 transition-all duration-300 group-hover:-translate-y-0.5' />
+                            </span>
+                            <h3 className='text-[13px] md:text-[14px] font-[700] leading-tight'>30 Days Returns</h3>
+                            <p className='text-[11px] font-[400] text-gray-400 !mt-1 leading-snug'>For an Exchange Product</p>
                         </div>
 
+                        <div className='col flex items-center justify-center flex-col group text-center !p-4 rounded-2xl border border-gray-100 hover:border-red-100 hover:bg-red-50/40 transition-all duration-300'>
+                            <span className='w-[52px] h-[52px] flex items-center justify-center rounded-full bg-red-50 group-hover:bg-red-100 transition-all duration-300 !mb-3'>
+                                <IoWalletOutline className='text-[26px] text-red-500 transition-all duration-300 group-hover:-translate-y-0.5' />
+                            </span>
+                            <h3 className='text-[13px] md:text-[14px] font-[700] leading-tight'>Secured Payment</h3>
+                            <p className='text-[11px] font-[400] text-gray-400 !mt-1 leading-snug'>Payment Cards Accepted</p>
+                        </div>
 
+                        <div className='col flex items-center justify-center flex-col group text-center !p-4 rounded-2xl border border-gray-100 hover:border-red-100 hover:bg-red-50/40 transition-all duration-300'>
+                            <span className='w-[52px] h-[52px] flex items-center justify-center rounded-full bg-red-50 group-hover:bg-red-100 transition-all duration-300 !mb-3'>
+                                <LiaGiftSolid className='text-[26px] text-red-500 transition-all duration-300 group-hover:-translate-y-0.5' />
+                            </span>
+                            <h3 className='text-[13px] md:text-[14px] font-[700] leading-tight'>Special Gifts</h3>
+                            <p className='text-[11px] font-[400] text-gray-400 !mt-1 leading-snug'>Our First Product Order</p>
+                        </div>
 
+                        <div className='col sm:col-span-1 col-span-2 flex items-center justify-center flex-col group text-center !p-4 rounded-2xl border border-gray-100 hover:border-red-100 hover:bg-red-50/40 transition-all duration-300'>
+                            <span className='w-[52px] h-[52px] flex items-center justify-center rounded-full bg-red-50 group-hover:bg-red-100 transition-all duration-300 !mb-3'>
+                                <BiSupport className='text-[26px] text-red-500 transition-all duration-300 group-hover:-translate-y-0.5' />
+                            </span>
+                            <h3 className='text-[13px] md:text-[14px] font-[700] leading-tight'>Support 24/7</h3>
+                            <p className='text-[11px] font-[400] text-gray-400 !mt-1 leading-snug'>Contact us Anytime</p>
+                        </div>
                     </div>
 
-                    <hr className='mt-8 mb-12 md:mb-16' />
+                    <hr className='!mt-8 !mb-6' />
 
-                    <div className='footer flex flex-col md:flex-row items-start md:items-start gap-8 md:gap-8 py-6 pb-12 md:pb-16' style={{ paddingTop: '15px', paddingBottom: '30px' }}>
-                        <div className='part1 w-full md:w-[25%] md:border-r border-[rgba(0,0,0,0.1)] md:pr-8'>
-                            <h2 className='text-[18px] font-[600] mb-4'>
-                                Contact us
-                            </h2>
-                            <p className='text-[13px] font-[400] mb-3 leading-relaxed'>
-                                ClassShop - Mega Super Store<br />
-                                Mandya, Karnataka<br />
-                                India
+                    <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 !py-10'>
+                        <div className='flex flex-col gap-3'>
+                            <h2 className='text-[15px] font-[700] uppercase tracking-widest text-gray-800 !mb-1'>Contact Us</h2>
+                            <p className='text-[13px] text-gray-500 leading-relaxed'>
+                                ClassyShop Mega Super Store<br />
+                                Mandya, Karnataka, India
                             </p>
-                            <Link className='link text-[13px] block mb-4 hover:text-red-500 transition-colors' to="mailto:someone@example.com">harsh@company.com</Link>
-                            <span className='text-[22px] font-[600] block w-full mb-6 !text-red-500'>
-                                (+91) 8292035874
-                            </span>
-
-                            <div className='flex items-center gap-3 mt-4' style={{ paddingTop: '20px' }}>
-                                <IoChatboxOutline className='text-[40px] !text-red-500 flex-shrink-0' />
-                                <span className='text-[16px] font-[600] leading-relaxed'>
+                            <Link className='text-[13px] text-gray-600 hover:text-red-500 transition-colors' to="mailto:harsh@company.com">harsh@company.com</Link>
+                            <span className='text-[18px] font-[700] text-red-500'>(+91) 8292035874</span>
+                            <div className='flex items-center gap-3 !mt-2 bg-red-50 rounded-xl !p-3'>
+                                <IoChatboxOutline className='text-[28px] text-red-500 flex-shrink-0' />
+                                <span className='text-[14px] font-[600] leading-tight'>
                                     Online Chat<br />
-                                    <span className='text-[13px] font-[400] text-gray-600'>Get Expert Help</span>
+                                    <span className='text-[12px] font-[400] text-gray-500'>Get Expert Help</span>
                                 </span>
                             </div>
                         </div>
 
 
-                        <div className='part2 w-full md:w-[40%] flex flex-col md:flex-row gap-8 md:gap-10'>
-                            <div className="part2_col1 w-full md:w-[50%]">
-                                <h2 className='text-[18px] font-[600] mb-4'>
-                                    Products
-                                </h2>
-
-                                <ul className='list space-y-3'>
-                                    <li className='list-none text-[14px] w-full'><Link to="/" className='link hover:text-red-500 transition-colors'>Prices Drop</Link></li>
-                                    <li className='list-none text-[14px] w-full'><Link to="/" className='link hover:text-red-500 transition-colors'>New Products</Link></li>
-                                    <li className='list-none text-[14px] w-full'><Link to="/" className='link hover:text-red-500 transition-colors'>Best Deals</Link></li>
-                                    <li className='list-none text-[14px] w-full'><Link to="/" className='link hover:text-red-500 transition-colors'>Contact us</Link></li>
-                                    <li className='list-none text-[14px] w-full'><Link to="/" className='link hover:text-red-500 transition-colors'>Sitemap</Link></li>
-                                    <li className='list-none text-[14px] w-full'><Link to="/" className='link hover:text-red-500 transition-colors'>Stores</Link></li>
-                                </ul>
-                            </div>
-
-                            <div className="part2_col2 w-full md:w-[50%]">
-                                <h2 className='text-[18px] font-[600] mb-4'>
-                                    Our Company
-                                </h2>
-
-                                <ul className='list space-y-3'>
-                                    <li className='list-none text-[14px] w-full'><Link to="/" className='link hover:text-red-500 transition-colors'>Delivery</Link></li>
-                                    <li className='list-none text-[14px] w-full'><Link to="/" className='link hover:text-red-500 transition-colors'>Legal Notice</Link></li>
-                                    <li className='list-none text-[14px] w-full'><Link to="/" className='link hover:text-red-500 transition-colors'>Terms & Conditions</Link></li>
-                                    <li className='list-none text-[14px] w-full'><Link to="/" className='link hover:text-red-500 transition-colors'>About Us</Link></li>
-                                    <li className='list-none text-[14px] w-full'><Link to="/" className='link hover:text-red-500 transition-colors'>Secure Payment</Link></li>
-                                    <li className='list-none text-[14px] w-full'><Link to="/" className='link hover:text-red-500 transition-colors'>Login</Link></li>
-                                </ul>
-                            </div>
-
+                        <div className='flex flex-col gap-3'>
+                            <h2 className='text-[15px] font-[700] uppercase tracking-widest text-gray-800 !mb-2'>Products</h2>
+                            <ul className='space-y-2 !p-0'>
+                                {['Prices Drop', 'New Products', 'Best Deals', 'Contact Us', 'Sitemap', 'Stores'].map(link => (
+                                    <li key={link} className='list-none'>
+                                        <Link to="/" className='text-[13px] text-gray-500 hover:text-red-500 transition-colors flex items-center gap-1.5 group'>
+                                            <span className='w-1 h-1 rounded-full bg-red-400 opacity-0 group-hover:opacity-100 transition-opacity'></span>
+                                            {link}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
 
-                        <div className='part2 w-full md:w-[35%] flex flex-col'>
-                            <h2 className='text-[18px] font-[600] mb-4'>
-                                Subscribe To Newsletter
-                            </h2>
-                            <p className='text-[13px] mb-5 leading-relaxed'>Subscribe to our latest newsletter to get news about special discounts.</p>
+                        <div className='flex flex-col gap-3'>
+                            <h2 className='text-[15px] font-[700] uppercase tracking-widest text-gray-800 !mb-2'>Our Company</h2>
+                            <ul className='space-y-2 !p-0'>
+                                {['Delivery', 'Legal Notice', 'Terms & Conditions', 'About Us', 'Secure Payment', 'Login'].map(link => (
+                                    <li key={link} className='list-none'>
+                                        <Link to="/" className='text-[13px] text-gray-500 hover:text-red-500 transition-colors flex items-center gap-1.5 group'>
+                                            <span className='w-1 h-1 rounded-full bg-red-400 opacity-0 group-hover:opacity-100 transition-opacity'></span>
+                                            {link}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
 
-                            <form className='flex flex-col gap-4'>
-                                <input type="text" className='w-full h-[45px] border outline-none pl-4 rounded-sm focus:border-red-500 transition-colors'
-                                    placeholder='Your Email Address' />
-                                <Button className='btn-org w-full md:w-auto'>Subscribe</Button>
+                        <div className='flex flex-col gap-4'>
+                            <h2 className='text-[15px] font-[700] uppercase tracking-widest text-gray-800 !mb-1'>Newsletter</h2>
+                            <p className='text-[13px] text-gray-500 leading-relaxed'>Get the latest deals & news straight to your inbox.</p>
+                            <form className='flex flex-col gap-3'>
+                                <input type="text"
+                                    className='w-full h-[44px] border border-gray-200 outline-none !pl-4 rounded-lg text-[13px] focus:border-red-400 transition-colors'
+                                    placeholder='Your email address' />
+                                <button type="submit" className='w-full h-[44px] rounded-lg text-[13px] font-[700] text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transition-all shadow-md shadow-red-200'>
+                                    Subscribe Now
+                                </button>
                                 <FormControlLabel
-                                    control={<Checkbox />}
-                                    label="I agree to the terms and conditions and the privacy policy"
-                                    className='text-[12px]'
+                                    control={<Checkbox size="small" />}
+                                    label={<span className='text-[11px] text-gray-400'>I agree to the privacy policy & terms</span>}
+                                    className='!ml-0 !mt-0'
                                 />
                             </form>
                         </div>
-
                     </div>
-
                 </div>
             </footer>
 
 
-            <div className='bottomStrip border-t border-[rgba(0,0,0,0.1)] bg-white py-6' style={{ paddingTop: '10px', paddingBottom: '10px' }}>
-                <div className='container flex flex-col md:flex-row items-center justify-between gap-6'>
-                    <ul className='flex items-center gap-3'>
-                        <li className='list-none'><Link to="/" target="_blank" className='!w-[35px] !h-[35px] rounded-full border border-[rgba(0,0,0,0.1)] 
-                        flex items-center justify-center group hover:bg-red-500 transition-all'>
-                            <CiFacebook className='text-[20px] group-hover:text-white' />
-                        </Link>
-
-                        </li>
-
-                        <li className='list-none'><Link to="/" target="_blank" className='!w-[35px] !h-[35px] rounded-full border border-[rgba(0,0,0,0.1)] 
-                        flex items-center justify-center group hover:bg-red-500 transition-all'>
-                            <RiTwitterXLine className='text-[20px] group-hover:text-white' />
-                        </Link>
-
-                        </li>
-
-                        <li className='list-none'><Link to="/" target="_blank" className='!w-[35px] !h-[35px] rounded-full border border-[rgba(0,0,0,0.1)] 
-                        flex items-center justify-center group hover:bg-red-500 transition-all'>
-                            <CiYoutube className='text-[20px] group-hover:text-white' />
-                        </Link>
-
-                        </li>
-
-                        <li className='list-none'><Link to="/" target="_blank" className='!w-[35px] !h-[35px] rounded-full border border-[rgba(0,0,0,0.1)] 
-                        flex items-center justify-center group hover:bg-red-500 transition-all'>
-                            <FaPinterest className='text-[20px] group-hover:text-white' />
-                        </Link>
-
-                        </li>
-
-                        <li className='list-none'><Link to="/" target="_blank" className='!w-[35px] !h-[35px] rounded-full border border-[rgba(0,0,0,0.1)] 
-                        flex items-center justify-center group hover:bg-red-500 transition-all'>
-                            <FaInstagram className='text-[20px] group-hover:text-white' />
-                        </Link>
-
-                        </li>
+            <div className='bottomStrip border-t border-[rgba(0,0,0,0.05)] bg-gray-950 !py-5'>
+                <div className='container flex flex-col md:flex-row items-center justify-between gap-4'>
+                    <ul className='flex items-center gap-2'>
+                        {[
+                            { icon: <CiFacebook className='text-[18px]' /> },
+                            { icon: <RiTwitterXLine className='text-[16px]' /> },
+                            { icon: <CiYoutube className='text-[18px]' /> },
+                            { icon: <FaPinterest className='text-[16px]' /> },
+                            { icon: <FaInstagram className='text-[16px]' /> },
+                        ].map((item, i) => (
+                            <li key={i} className='list-none'>
+                                <Link to="/" target="_blank" className='w-[34px] h-[34px] rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-red-500 hover:bg-red-500/10 transition-all'>
+                                    {item.icon}
+                                </Link>
+                            </li>
+                        ))}
                     </ul>
 
-                    <p className='text-[13px] text-center mb-0 order-3 md:order-2'>
-                        © 2025 - Ecommerce Template
+                    <p className='text-[12px] text-white/40 !mb-0 order-3 md:order-2'>
+                        © 2025 ClassyShop. All rights reserved.
                     </p>
-                    <div className='flex items-center gap-2 order-2 md:order-3'>
-                        <img src="/card1.png" alt='image' />
-                        <img src="/card2.png" alt='image' />
-                        <img src="/card3.png" alt='image' />
-                        <img src="/card4.png" alt='image' />
-                        <img src="/card5.png" alt='image' />
+
+                    <div className='flex items-center gap-2 order-2 md:order-3 opacity-60'>
+                        <img src="/card1.png" alt='Visa' className='h-5 object-contain' />
+                        <img src="/card2.png" alt='MC' className='h-5 object-contain' />
+                        <img src="/card3.png" alt='Amex' className='h-5 object-contain' />
+                        <img src="/card4.png" alt='PayPal' className='h-5 object-contain' />
+                        <img src="/card5.png" alt='Stripe' className='h-5 object-contain' />
                     </div>
                 </div>
             </div>
@@ -259,37 +222,133 @@ const Footer = () => {
 
             </Drawer>
 
+            {/* ===== Responsive Product Details Modal ===== */}
             <Dialog
                 open={context?.openProductDetailsModal.open}
-                fullWidth={context?.fullWidth}
-                maxWidth={context?.maxWidth}
+                fullWidth
+                maxWidth="md"
                 onClose={context?.handleCloseProductDetailsModal}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
+                aria-labelledby="product-detail-dialog-title"
                 className="productDetailModal"
-            >
-
-                <DialogContent>
-                    <div className="flex items-center w-full productDetailModalContainer relative">
-                        <Button className="w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] !absolute top-[15px] right-[15px] !bg-[#f1f1f1]" onClick={context?.handleCloseProductDetailsModal}>
-                            <IoCloseSharp className="text-[20px]" />
-                        </Button>
-
-                        {
-                            context?.openProductDetailsModal?.item?.length !== 0 &&
-                            <>
-                                <div className="col1 w-[40%] !mt-4 !h-[480px] !pl-3 !pr-2">
-                                    <ProductZoom images={context?.openProductDetailsModal?.item?.images} className='w-full' />
-                                </div>
-
-                                <div className="col2 w-[60%] !py-5 !px-8 !pr-16 productContent overflow-y-auto max-h-[70vh]">
-                                    <ProductDetailsComponents item={context?.openProductDetailsModal?.item} />
-                                </div>
-
-                            </>
+                slotProps={{
+                    paper: {
+                        sx: {
+                            borderRadius: '16px',
+                            overflow: 'hidden',
+                            m: { xs: 1, sm: 2 },
+                            maxHeight: { xs: '92vh', sm: '90vh' },
+                            width: '100%',
+                            position: 'relative',
                         }
+                    }
+                }}
+            >
+                <DialogContent
+                    sx={{
+                        padding: '0px !important',
+                        overflow: 'hidden',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: { xs: '92vh', md: 'auto' },
+                    }}
+                >
+                    <Button
+                        sx={{
+                            position: 'absolute',
+                            top: '10px',
+                            right: '10px',
+                            zIndex: 100,
+                            width: '36px',
+                            height: '36px',
+                            minWidth: '36px',
+                            borderRadius: '50%',
+                            backgroundColor: 'rgba(255,255,255,0.9)',
+                            color: '#000',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                            '&:hover': { backgroundColor: 'rgba(255,255,255,1)' }
+                        }}
+                        onClick={context?.handleCloseProductDetailsModal}
+                    >
+                        <IoCloseSharp style={{ fontSize: '18px' }} />
+                    </Button>
 
-                    </div>
+                    {context?.openProductDetailsModal?.item?.length !== 0 && (
+                        <>
+                            {/* ── MOBILE layout ── */}
+                            <Box
+                                sx={{
+                                    display: { xs: 'flex', md: 'none' },
+                                    flexDirection: 'column',
+                                    overflowY: 'auto',
+                                    height: '100%',
+                                }}
+                            >
+                                <Box className="!p-3 !px-2 "
+                                    sx={{
+                                        width: '100%',
+                                        height: '320px',
+                                        flexShrink: 0,
+                                        overflow: 'hidden',
+                                        position: 'relative',
+                                    }}
+                                >
+                                    <ProductZoom
+                                        images={context?.openProductDetailsModal?.item?.images}
+                                        style={{ width: '100%', height: '100%', display: 'block' }}
+                                    />
+                                </Box>
+
+                                {/* Details — rendered BELOW image, not over it */}
+                                <Box
+                                    sx={{
+                                        p: 2,
+                                        pb: 5,
+                                        backgroundColor: '#fff',
+                                        position: 'relative', // break any stacking context bleed
+                                        zIndex: 1,
+                                    }}
+                                >
+                                    <ProductDetailsComponents item={context?.openProductDetailsModal?.item} />
+                                </Box>
+                            </Box>
+
+                            {/* ── DESKTOP layout ── */}
+                            <Box
+                                sx={{
+                                    display: { xs: 'none', md: 'flex' },
+                                    flexDirection: 'row',
+                                    minHeight: 0,
+                                }}
+                            >
+                                <Box className="!p-3 !px-2 "
+                                    sx={{
+                                        width: '42%',
+                                        flexShrink: 0,
+                                        minHeight: '420px',
+                                        maxHeight: '80vh',
+                                        overflow: 'hidden',
+                                    }}
+                                >
+                                    <ProductZoom
+                                        images={context?.openProductDetailsModal?.item?.images}
+                                        style={{ width: '100%', height: '100%' }}
+                                    />
+                                </Box>
+
+                                <Box className="!p-3 !px-2 "
+                                    sx={{
+                                        flex: 1,
+                                        overflowY: 'auto',
+                                        p: 3,
+                                        pr: 5,
+                                        maxHeight: '80vh',
+                                    }}
+                                >
+                                    <ProductDetailsComponents item={context?.openProductDetailsModal?.item} />
+                                </Box>
+                            </Box>
+                        </>
+                    )}
                 </DialogContent>
             </Dialog>
 

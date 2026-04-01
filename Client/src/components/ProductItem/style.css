@@ -5,8 +5,6 @@
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
     height: 100%;
     position: relative;
 }
@@ -226,40 +224,23 @@
     .productItem__info {
         padding: 16px;
     }
-    
+
     .productItem__title {
         font-size: 14px;
         min-height: 40px;
     }
-    
+
     .productItem__price {
         font-size: 16px;
     }
-    
+
     .productItem__actionBtn {
         width: 36px !important;
         height: 36px !important;
         min-width: 36px !important;
     }
-    
+
     .productItem__actionBtn svg {
         font-size: 16px;
-    }
-}
-
-/* Animation for actions on mobile */
-@media (max-width: 768px) {
-    .productItem__actions {
-        opacity: 1;
-        transform: translateX(0);
-        position: static;
-        flex-direction: row;
-        justify-content: center;
-        margin-top: 12px;
-        padding: 0 12px;
-    }
-    
-    .productItem__imageWrapper {
-        border-radius: 12px;
     }
 }

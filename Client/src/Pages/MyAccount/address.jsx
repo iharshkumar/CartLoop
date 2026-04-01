@@ -87,13 +87,13 @@ const Address = () => {
     return (
         <>
             <section className='!py-10 w-full'>
-                <div className='container flex gap-5'>
-                    <div className='col1 w-[20%]'>
+                <div className='container flex flex-col lg:flex-row gap-5 px-4 lg:px-0'>
+                    <div className='col1 hidden lg:block w-[20%]'>
                         <AccountSidebar />
                     </div>
 
 
-                    <div className='col2 w-[50%] '>
+                    <div className='col2 w-full lg:w-[70%]'>
                         <div className='card bg-white !p-5 !shadow-md !rounded-md !mb-5'>
                             <div className='flex items-center !pb-3'>
                                 <h2 className='!pb-0'>Address</h2>

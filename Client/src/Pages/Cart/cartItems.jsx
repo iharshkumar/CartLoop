@@ -75,8 +75,8 @@ const CartItems = (props) => {
     }
 
     return (
-        <div className='cartItem w-full !p-3 flex items-center gap-4 !pb-5 !border-b !border-[rgba(0,0,0.1)]'>
-            <div className='img w-[15%] !rounded-md !overflow-hidden'>
+        <div className='cartItem w-full !p-3 flex items-start md:items-center gap-4 !pb-5 !border-b !border-[rgba(0,0,0.1)]'>
+            <div className='img w-[25%] md:w-[15%] !rounded-md !overflow-hidden'>
                 <Link to={`/product/${props?.item?.productId}`} className="group">
                     <img src={props?.item?.image}
                         className='w-full group-hover:scale-105 transition-all' />
@@ -84,12 +84,12 @@ const CartItems = (props) => {
             </div>
 
 
-            <div className='info w-[85%] relative '>
+            <div className='info w-[75%] md:w-[85%] relative '>
 
                 <IoCloseSharp className='cursor-pointer absolute  top-[0px] right-[0px] text-[22px] link transition-all' onClick={handleDeleteCart} />
                 <span className='text-[14px]'>{props?.item?.brand}</span>
                 <h3 className='text-[15px]'>
-                    <Link className='link' to={`/product/${props?.item?.productId}`}>{props?.item?.productTitle}
+                    <Link className='link' to={`/product/${props?.item?.productId}`}>{props?.item?.productTitle.substring(0, 50) + "..."}
                     </Link>
                 </h3>
 
@@ -198,19 +198,19 @@ const CartItems = (props) => {
                 </div>
 
 
-                <div className='flex items-center gap-4 !mt-3'>
+                <div className='flex items-center gap-2 md:gap-4 !mt-3 flex-wrap'>
 
-                    <span className='price text-[15px] font-[600] text-red-500'>
+                    <span className='price text-[14px] md:text-[15px] font-[600] text-red-500'>
                         {props?.item?.discount}%
                     </span>
 
-                    <span className='price text-[15px] font-[600]'>
+                    <span className='price text-[14px] md:text-[15px] font-[600]'>
                         Price: &#8377; {props?.item?.price}
                     </span>
 
 
 
-                    <span className='price text-[#f15252] text-[15px] font-[700]'>
+                    <span className='price text-[#f15252] text-[14px] md:text-[15px] font-[700]'>
                         Subtotal: &#8377; {props?.item?.subTotal?.toLocaleString("en-IN")}
                     </span>
                 </div>

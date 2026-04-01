@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 import { Link, useNavigate } from 'react-router-dom';
 import { MyContext } from '../../App';
 import CircularProgress from '@mui/material/CircularProgress';
-import { postData } from '../../utils/api';
+import { postData, hashPassword } from '../../utils/api';
 
 
 
@@ -44,7 +44,7 @@ const ForgotPassword = () => {
     const validateValue = Object.values(formFields).every(el => el)
 
     // console.log(formFields)
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
 
         e.preventDefault()
 
@@ -62,7 +62,16 @@ const ForgotPassword = () => {
         }
 
 
-        postData(`/api/user/reset-password`, formFields).then((res) => {
+        const hashedNewPassword = await hashPassword(formFields.newPassword);
+        const hashedConfirmPassword = await hashPassword(formFields.confirmPassword);
+        
+        const resetData = {
+            ...formFields,
+            newPassword: hashedNewPassword,
+            confirmPassword: hashedConfirmPassword
+        }
+
+        postData(`/api/user/reset-password`, resetData, { credentials: 'include' }).then((res) => {
             // console.log(res)
             if (res?.error === false) {
                 localStorage.removeItem("userEmail")
@@ -73,6 +82,7 @@ const ForgotPassword = () => {
                 history('/login')
             } else {
                 context.alertBox("error", res?.message)
+                setIsLoading(false)
             }
 
         })

@@ -1,9 +1,11 @@
 import { Button, Rating } from '@mui/material';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import QtyBox from '../QtyBox';
 import { FaRegHeart } from 'react-icons/fa';
+import { IoMdHeart } from 'react-icons/io';
 import { MdOutlineShoppingCart } from 'react-icons/md';
 import { IoGitCompareOutline } from 'react-icons/io5';
+import { deleteData, postData } from '../../utils/api.js';
 
 import { MyContext } from '../../App';
 
@@ -13,8 +15,56 @@ const ProductDetailsComponents = (props) => {
     const [productSizeIndex, setProductSizeIndex] = useState(null)
     const [productWeightIndex, setProductWeightIndex] = useState(null)
     const [qtyVal, setQtyVal] = useState(1);
+    const [isAddedToMyList, setIsAddedToMyList] = useState(false);
 
     const context = React.useContext(MyContext);
+
+    useEffect(() => {
+        const myListItem = context?.myListData?.filter((item) =>
+            item?.productId.includes(props?.item?._id)
+        );
+        setIsAddedToMyList(myListItem?.length !== 0);
+    }, [context?.myListData, props?.item?._id]);
+
+    const handleAddToMyList = (item) => {
+        if (!context?.userData?._id) {
+            context?.alertBox("error", "Please login to add product to Wishlist");
+            return;
+        }
+        if (isAddedToMyList) {
+            const myListItem = context?.myListData?.find((listItem) => listItem.productId === item?._id);
+            if (myListItem) {
+                deleteData(`/api/myList/${myListItem?._id}`).then((res) => {
+                    if (res?.error === false) {
+                        context?.alertBox("success", "Item Removed from Wishlist");
+                        setIsAddedToMyList(false);
+                        context?.getMyListData();
+                    }
+                });
+            }
+        } else {
+            const obj = {
+                productId: item?._id,
+                userId: context?.userData?._id,
+                productTitle: item?.name,
+                image: item?.images[0],
+                price: item?.price,
+                oldPrice: item?.oldPrice,
+                discount: item?.discount,
+                rating: item?.rating,
+                brand: item?.brand,
+            };
+            postData("/api/myList/add", obj).then((res) => {
+                if (res?.error === false) {
+                    context?.alertBox("success", "Item Added to Wishlist");
+                    setIsAddedToMyList(true);
+                    context?.getMyListData();
+                } else {
+                    context?.alertBox("error", res?.message);
+                }
+            });
+        }
+    };
 
     const addToCart = () => {
         const variations = {
@@ -23,7 +73,6 @@ const ProductDetailsComponents = (props) => {
             productWeight: productWeightIndex !== null ? props?.item?.productWeight[productWeightIndex] : ""
         }
 
-        // Check if required variations are selected
         if (props?.item?.productRam?.length !== 0 && productRamIndex === null) {
             context?.alertBox("error", "Please select RAM");
             return;
@@ -40,31 +89,33 @@ const ProductDetailsComponents = (props) => {
         context?.addToCart(props?.item, context?.userData?._id, qtyVal, variations);
     }
 
+
     return (
 
         <>
             <h1 className='text-[25px] font-[600] !mb-2'>
                 {props?.item?.name}
             </h1>
-            <div className='flex items-center gap-3'>
+            <div className='reviewandbrand flex items-start !flex-col md:!flex-row '>
                 <span className='text-gray-400 text-[13px] opacity-75'>Brands : <span className='font-[500] !text-black'>
                     {props?.item?.brand}
-                </span>
-                </span>
+                </span></span>
 
-
-                <Rating name="size-small" defaultValue={props?.item?.rating} precision={0.5} size="small" readOnly />
-                <span className='text-[13px] cursor-pointer' onClick={props?.gotoReviewSection}>Review ({props?.reviewCount})</span>
-
+                <div className='flex items-start gap-1 flex-row !ml-0 md:!ml-[70px]'>
+                    <Rating name="size-small" defaultValue={props?.item?.rating} precision={0.5} size="small" readOnly />
+                    <span className='text-[13px] cursor-pointer' onClick={props?.gotoReviewSection}>Review ({props?.reviewCount})</span>
+                </div>
             </div>
-            <div className='productItem__priceWrapper !mt-4'>
-                <span className='productItem__oldPrice'>
-                    &#8377; {props?.item?.oldPrice}
-                </span>
-                <span className='productItem__price'>
-                    &#8377; {props?.item?.price}
-                </span>
-                <span className='text-[14px]'>Available In Stock: <span className='!text-green-500 text-[14px] font-[500]'>{props?.item?.countInStock} items</span></span>
+            <div className='productItem__priceWrapper !mt-4 !flex-col md:!flex-row '>
+                <div className='flex !items-start gap-4'>
+                    <span className='productItem__oldPrice'>
+                        &#8377; {props?.item?.oldPrice}
+                    </span>
+                    <span className='productItem__price'>
+                        &#8377; {props?.item?.price}
+                    </span>
+                </div>
+                <span className='text-[14px] !mt-1'>Available In Stock: <span className='!text-green-500 text-[14px] font-[500]'>{props?.item?.countInStock} items</span></span>
             </div>
 
 
@@ -122,8 +173,6 @@ const ProductDetailsComponents = (props) => {
                 </div>
             }
 
-
-
             <p className='text-[14px] !mt-3 !mb-3'>Free Shipping (Est. Delivery Time 2-3 Days)</p>
             <div className='flex items-center  gap-5 !py-3'>
                 <div className='qtyBoxWrapper w-[70px]'>
@@ -137,16 +186,19 @@ const ProductDetailsComponents = (props) => {
             </div>
 
             <div className='flex items-center gap-7 !mt-4'>
-                <span className='flex items-center gap-2 text-[15px] link cursor-pointer font-[500]'>
-                    < FaRegHeart className='text-[18px]' />
-                    Add to Wishlist
+                <span className='flex items-center gap-2 text-[15px] link cursor-pointer font-[500]'
+                    onClick={() => handleAddToMyList(props?.item)}>
+                    {isAddedToMyList ? <IoMdHeart className='text-[18px] !text-red-500' /> : <FaRegHeart className='text-[18px]' />}
+                    {isAddedToMyList ? 'Wishlisted' : 'Add to Wishlist'}
                 </span>
 
-                <span className='flex items-center gap-2 text-[15px] link cursor-pointer font-[500]'>
-                    < IoGitCompareOutline className='text-[18px]' />
+                <span className='flex items-center gap-2 text-[15px] link cursor-pointer font-[500]'
+                    onClick={() => context?.addToCompare(props?.item, context?.userData?._id)}>
+                    <IoGitCompareOutline className='text-[18px]' />
                     Add to Compare
                 </span>
             </div>
+
         </>
     )
 }

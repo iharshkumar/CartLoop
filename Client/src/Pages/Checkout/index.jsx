@@ -236,12 +236,12 @@ const Checkout = () => {
     return (
         <section className='!py-10'>
             <form onSubmit={checkout}>
-                <div className='w-[80%] !mx-auto flex gap-5'>
-                    <div className='leftCol w-[70%]'>
+                <div className='w-full lg:w-[90%] xl:w-[80%] !mx-auto flex flex-col lg:flex-row gap-5 !px-4'>
+                    <div className='leftCol w-full lg:w-[70%]'>
                         <div className='card w-full rounded-md bg-white shadow-md !p-5'>
                             <div className='flex items-center justify-between !mb-3'>
                                 <h2>Select Delivery Address</h2>
-                                <Button variant="outlined" className='!gap-2'
+                                <Button variant="outlined" className='!gap-2 !whitespace-nowrap'
                                     onClick={() => { context?.setEditId(null); context?.toggleAddressPanel(true); }}>
                                     <FaPlus /> Add New Address
                                 </Button>
@@ -285,7 +285,7 @@ const Checkout = () => {
                         </div>
                     </div>
 
-                    <div className='rightCol w-[30%]'>
+                    <div className='rightCol w-full lg:w-[30%] '>
                         <div className='card !shadow-md !rounded-md !bg-white !p-5'>
                             <h3 className='!mb-4'>Your Order</h3>
                             <div className='flex items-center justify-between !py-3 !px-2 border-t border-b border-[rgba(0,0,0,0.1)]'>

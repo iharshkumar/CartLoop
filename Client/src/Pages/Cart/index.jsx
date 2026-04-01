@@ -14,13 +14,17 @@ const CartPage = () => {
 
     return (
         <section className='section !py-10 !pb-10'>
-            <div className='container !w-[90%] !max-w-[90%] flex items-start gap-5'>
-                <div className='leftPart w-[70%]'>
-
+            <div className='container !w-[90%] !max-w-[90%] flex flex-col lg:flex-row items-start gap-5'>
+                <div className='leftPart w-full lg:w-[70%]'>
                     <div className='!shadow-md !rounded-md !bg-white'>
-                        <div className='  !p-3 !w-full !border-b border-[rgba(0,0,0,0.1)]'>
-                            <h2>Your Cart</h2>
-                            <p className='!mt-0'>There are <span className='font-bold text-[#ff5252]'>{context?.cartData?.length}</span> products in your cart</p>
+                        <div className='!p-5 !w-full !border-b border-[rgba(0,0,0,0.1)] bg-gradient-to-r from-red-50 to-orange-50 rounded-t-md flex items-center gap-4'>
+                            <div className='flex items-center justify-center w-[60px] h-[60px] bg-white rounded-full shadow-sm'>
+                                <BsFillBagFill className='text-[24px] text-[#ff5252]' />
+                            </div>
+                            <div>
+                                <h1 className='text-[22px] md:text-[28px] font-bold text-gray-800 tracking-tight !mb-0' style={{ marginTop: 0 }}>Your Cart</h1>
+                                <p className='!mt-0 text-[14px] md:text-[15px] font-[500] text-gray-600 mb-0'>There are <span className='font-bold text-[#ff5252]'>{context?.cartData?.length}</span> items waiting for you.</p>
+                            </div>
                         </div>
 
                         {
@@ -46,7 +50,7 @@ const CartPage = () => {
                 </div>
 
 
-                <div className='rightPart w-[25%] sticky !top-20'>
+                <div className='rightPart w-full lg:w-[28%] sticky !top-40 !mt-6 lg:!mt-0'>
                     <div className='!shadow-md !rounded-md !bg-white !p-5'>
                         <h3 className='!pb-3'>Cart Details</h3>
                         <hr />

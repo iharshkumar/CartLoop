@@ -12,7 +12,7 @@ body {
   font-optical-sizing: auto;
   background: #f5f0f0;
   color: rgba(0, 0, 0, 0.9);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 p {
@@ -335,6 +335,18 @@ nav ui button:hover {
   padding-bottom: 10px !important;
   margin-left: 1px !important;
   margin-right: 2px !important;
+}
+
+.productItem__priceWrapper {
+  display: flex;
+  align-items: start !important;
+  gap: 10px;
+}
+
+.reviewandbrand {
+  display: flex;
+  align-items: start !important;
+  gap: 10px !important;
 }
 
 .productSlider {

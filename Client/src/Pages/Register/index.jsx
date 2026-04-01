@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 import { FcGoogle } from "react-icons/fc";
 import { AiFillApple } from "react-icons/ai";
 import { BsFillPersonFill } from "react-icons/bs";
-import { postData } from '../../utils/api';
+import { postData, hashPassword } from '../../utils/api';
 import { useContext } from 'react';
 import { MyContext } from '../../App';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -61,7 +61,7 @@ const Register = () => {
     const validateValue = Object.values(formFields).every(el => el)
 
     // console.log(formFields)
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
 
         e.preventDefault()
 
@@ -80,12 +80,18 @@ const Register = () => {
             context.alertBox("error", "Please enter password")
             return false
         }
-        postData("/api/user/register", formFields).then((res) => {
+        const hashedPassword = await hashPassword(formFields.password);
+        const registerData = {
+            ...formFields,
+            password: hashedPassword
+        }
+        postData("/api/user/register", registerData).then((res) => {
             console.log(res)
             if (res?.error === false) {
                 setIsLoading(false)
                 context.alertBox("success", res?.message)
                 localStorage.setItem("userEmail", formFields.email)
+                localStorage.removeItem("actionType")
                 setFormFields({
                     name: "",
                     email: "",

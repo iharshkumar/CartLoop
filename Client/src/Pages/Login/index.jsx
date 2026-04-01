@@ -12,7 +12,7 @@ import { FcGoogle } from "react-icons/fc";
 import { AiFillApple } from "react-icons/ai";
 import { MyContext } from '../../App';
 import CircularProgress from '@mui/material/CircularProgress';
-import { postData } from '../../utils/api';
+import { postData, hashPassword } from '../../utils/api';
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { firebaseApp } from '../../firebase.jsx';
 
@@ -78,7 +78,7 @@ const Login = () => {
     const validateValue = Object.values(formFields).every(el => el)
 
     // console.log(formFields)
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
 
         e.preventDefault()
 
@@ -92,7 +92,12 @@ const Login = () => {
             context.alertBox("error", "Please enter password")
             return false
         }
-        postData("/api/user/login", formFields, { withCredentials: true }).then((res) => {
+        const hashedPassword = await hashPassword(formFields.password);
+        const loginData = {
+            ...formFields,
+            password: hashedPassword
+        }
+        postData("/api/user/login", loginData, { credentials: 'include' }).then((res) => {
             console.log(res)
             if (res?.error === false) {
                 setIsLoading(false)

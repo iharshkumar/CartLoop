@@ -18,16 +18,16 @@ const MyListItems = (props) => {
     }
 
     return (
-        <div className='cartItem w-full !p-3 flex items-center gap-4 !pb-5 !border-b !border-[rgba(0,0,0.1)]'>
-            <div className='img w-[15%] !h-[150px] !rounded-md !overflow-hidden'>
+        <div className='cartItem w-full !p-3 flex items-start md:items-center gap-4 !pb-5 !border-b !border-[rgba(0,0,0.1)]'>
+            <div className='img w-[25%] md:w-[15%] !h-[120px] md:!h-[150px] !rounded-md !overflow-hidden'>
                 <Link to={`/product/${props?.item?.productId}`} className="group">
                     <img src={props?.item?.image}
-                        className='w-full group-hover:scale-105 transition-all' />
+                        className='w-full h-full object-cover group-hover:scale-105 transition-all' />
                 </Link>
             </div>
 
 
-            <div className='info w-[85%] relative '>
+            <div className='info w-[75%] md:w-[85%] relative '>
                 <IoCloseSharp className='cursor-pointer absolute  top-[0px] right-[0px] text-[22px] link transition-all' onClick={() => handleDeleteCart(props?.item?._id)} />
 
                 <span className='text-[14px] !mb-1'>{props?.item?.brand}</span>

@@ -18,6 +18,7 @@ import { fetchDataFromApi } from '../../utils/api';
 //import { useNavigate } from 'react-router-dom';
 import { MyContext } from '../../App';
 import ProductLoading from '../../components/ProductLoading';
+import BannerLoading from '../../components/BannerLoading';
 
 
 
@@ -92,25 +93,22 @@ const Home = () => {
 
   return (
     <>
-
-      {
-        homeSlidesData?.length !== 0 && <HomeSlider data={homeSlidesData} />
-      }
-
-
-
-
-
-
+      <div className='min-h-[28vh] lg:!min-h-[42vh] relative'>
+        {
+          homeSlidesData?.length === 0 && <BannerLoading />
+        }
+        {
+          homeSlidesData?.length !== 0 && <HomeSlider data={homeSlidesData} />
+        }
+      </div>
 
       {
         context?.catData?.length !== 0 && <HomeCatSlider data={context?.catData} />
       }
 
-
       <section className='bg-white !mt-0 !pb-4'>
         <div className='container'>
-          <div className='flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6'>
+          <div className='flex flex-col md:flex-row items-start md:items-center justify-between gap-4 !mb-6 lg:!mb-3'>
             <div className='leftSec'>
               <h2 className='text-[20px] font-[600] !mt-3 !mb-0'>Popular Products </h2>
               <p className='text-[15px] font-[300] !mt-0'>Do not miss the current offers until the end of March</p>
@@ -151,14 +149,14 @@ const Home = () => {
       </section>
 
       <section className='!py-6 !pb-0 !mb-0 !pb-5'>
-        <div className='container flex w-[50%] mx-auto justify-start gap-5'>
-          <div className='part1 w-[70%]'>
+        <div className='container flex flex-col lg:flex-row w-full mx-auto justify-start gap-5'>
+          <div className='part1 w-full lg:w-[70%] hidden lg:block'>
             {
               allProductsData?.length !== 0 && <HomeSliderV2 data={allProductsData} />
             }
           </div>
 
-          <div className='part2 w-[30%] pl-5 flex items-center gap-5 justify-between flex-col '>
+          <div className='part2 w-full lg:w-[30%] lg:pl-5 flex items-center gap-5 justify-between flex-col '>
             {
               bannerV2Data?.length !== 0 && (() => {
                 const leftBanner = bannerV2Data[0];
@@ -199,22 +197,21 @@ const Home = () => {
       <section className="!w-full bg-white pt-12 md:pt-16 pb-8 md:pb-12" style={{ paddingTop: '30px' }}>
         <div className="container bg-white w-full">
           <div className="freeShippng w-full bg-gradient-to-r from-red-50 to-orange-50 flex 
-          flex-col md:flex-row items-center justify-between gap-6 md:gap-8 rounded-lg p-8 md:p-10 mb-8 shadow-sm">
-            <div className="col1 flex items-center gap-4 md:gap-5">
-              <LiaShippingFastSolid className='text-[40px] md:text-[60px] text-primary' style={{ paddingLeft: '20px' }} />
-              <span className='text-[18px] md:text-[24px] font-[600] uppercase'>Free Shipping </span>
+          flex-col md:flex-row items-center justify-between gap-4 md:gap-8 rounded-lg p-4 md:p-10 mb-8 shadow-sm">
+            <div className="col1 flex flex-row items-center gap-2 md:gap-5 w-full md:w-auto justify-center md:justify-start text-left">
+              <LiaShippingFastSolid className='text-[40px] md:text-[60px] text-primary' />
+              <span className='text-[16px] md:text-[24px] font-[600] uppercase whitespace-nowrap'>Free Shipping</span>
             </div>
 
-            <div className="col2 flex-1 text-center md:text-left px-4">
-              <p className='text-[14px] md:text-[18px] mb-0 font-[500]' style={{ paddingLeft: '100px' }}>Enjoy free shipping on all orders over $50. Shop now and save!</p>
+            <div className="col2 flex-1 px-2 md:px-4 text-center md:text-left">
+              <p className='text-[13px] md:text-[18px] mb-0 font-[500] leading-tight'>Enjoy free shipping on all orders over $50. Shop now and save!</p>
             </div>
 
-            <div className="col3">
-              <button className='bg-primary !text-black py-3 px-8 md:px-10 rounded-md font-[500] text-[16px] md:text-[18px] ' style={{ paddingRight: '20px' }}>
+            <div className="col3 w-full md:w-auto flex justify-center">
+              <button className='bg-primary !text-black py-2 md:py-3 px-6 md:px-10 rounded-md font-[500] text-[14px] md:text-[18px] hover:bg-opacity-90 transition-all whitespace-nowrap'>
                 Shop Now
               </button>
             </div>
-
           </div>
 
           {

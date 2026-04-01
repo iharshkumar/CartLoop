@@ -1,17 +1,28 @@
 import axios from 'axios'
 const apiUrl = import.meta.env.VITE_API_URL;
 
+export const hashPassword = async (password) => {
+    if (!password) return "";
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+    return hashHex;
+};
 
-export const postData = async (url, formData) => {
+
+export const postData = async (url, formData, options = {}) => {
     try {
         const response = await fetch(apiUrl + url, {
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${localStorage.getItem("accesstoken")}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                ...options.headers
             },
-
-            body: JSON.stringify(formData)
+            body: JSON.stringify(formData),
+            ...options
         })
 
         if (response.ok) {
@@ -23,6 +34,7 @@ export const postData = async (url, formData) => {
         }
     } catch (error) {
         console.log("Error:", error)
+        return { error: true, message: error.message || "Something went wrong" };
     }
 }
 

@@ -4,16 +4,14 @@ import TextField from '@mui/material/TextField';
 import AccountSidebar from '../../components/AccountSidebar';
 import { MyContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
-import { editData, postData } from '../../utils/api';
+import { editData, postData, hashPassword, deleteData } from '../../utils/api';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Collapse } from 'react-collapse';
 import { PhoneInput } from 'react-international-phone';
 import 'react-international-phone/style.css';
 import Radio from '@mui/material/Radio';
-
-
-const label = { slotProps: { input: { 'aria-label': 'Checkbox demo' } } };
-
+import UserAvatar from '../../components/UserAvatar/index.jsx';
+import AddressBox from './addressBox';
 
 
 const MyAccount = () => {
@@ -26,6 +24,20 @@ const MyAccount = () => {
 
     const [isChangePasswordFormShow, setIsChangePasswordFormShow] = useState(false)
     const [selectedValue, setSelectedValue] = useState('');
+
+    const context = useContext(MyContext)
+    const history = useNavigate()
+
+    const removeAddress = (id) => {
+        deleteData(`/api/address/${id}`).then((res) => {
+            context.getAddresses();
+        })
+    }
+
+    const editAddress = (id) => {
+        context.setEditId(id);
+        context.setOpenAddressPanel(true);
+    }
 
     const handleChange = (event) => {
         setSelectedValue(event.target.value);
@@ -43,8 +55,6 @@ const MyAccount = () => {
         confirmPassword: ''
     })
 
-    const context = useContext(MyContext)
-    const history = useNavigate()
 
     useEffect(() => {
         const token = localStorage.getItem('accesstoken')
@@ -115,7 +125,7 @@ const MyAccount = () => {
 
 
     const validateValue2 = Object.values(formFields).every(el => el)
-    const handleSubmitChangePassword = (e) => {
+    const handleSubmitChangePassword = async (e) => {
 
         e.preventDefault()
 
@@ -140,11 +150,28 @@ const MyAccount = () => {
             return false
         }
 
-        postData(`/api/user/reset-password`, changePassword, { withCredentials: true }).then((res) => {
+        const hashedOldPassword = changePassword.oldPassword ? await hashPassword(changePassword.oldPassword) : "";
+        const hashedNewPassword = await hashPassword(changePassword.newPassword);
+        const hashedConfirmPassword = await hashPassword(changePassword.confirmPassword);
+        
+        const resetData = {
+            ...changePassword,
+            oldPassword: hashedOldPassword,
+            newPassword: hashedNewPassword,
+            confirmPassword: hashedConfirmPassword
+        }
+
+        postData(`/api/user/reset-password`, resetData, { credentials: 'include' }).then((res) => {
             //console.log(res)
             if (res?.error === false) {
                 setIsLoading2(false)
                 context.alertBox("success", res?.message)
+                setChangePassword({
+                    ...changePassword,
+                    oldPassword: "",
+                    newPassword: "",
+                    confirmPassword: ""
+                })
             } else {
                 context.alertBox("error", res?.message)
                 setIsLoading2(false)
@@ -173,14 +200,15 @@ const MyAccount = () => {
 
     return (
         <section className='!py-10 w-full'>
-            <div className='container flex gap-5'>
-                <div className='col1 w-[20%]'>
+            <div className='container flex flex-col lg:flex-row gap-5 px-4 lg:px-0'>
+                <div className='col1 hidden lg:block w-[20%]'>
                     <AccountSidebar />
                 </div>
 
 
-                <div className='col2 w-[50%] '>
+                <div className='col2 w-full lg:w-[70%]'>
                     <div className='card bg-white !p-5 !shadow-md !rounded-md !mb-5'>
+                        <UserAvatar className='lg:hidden mb-5' />
                         <div className='flex items-center !pb-3'>
                             <h2 className='!pb-0'>My Profile</h2>
                             <Button className='!ml-auto' onClick={() => setIsChangePasswordFormShow(!isChangePasswordFormShow)}>Change Password</Button>
@@ -240,7 +268,7 @@ const MyAccount = () => {
                             <div className='flex items-center gap-4'>
                                 <Button type="submit"
                                     disabled={!validateValue}
-                                    className='btn-org btn-lg w-[250px]'>
+                                    className='btn-org btn-lg w-full md:w-[250px]'>
 
                                     {
                                         isLoading === true ? <CircularProgress color="inherit" />
@@ -267,7 +295,7 @@ const MyAccount = () => {
                             <hr />
 
                             <form className='!mt-8' onSubmit={handleSubmitChangePassword}>
-                                <div className='grid grid-cols-2 gap-5'>
+                                <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
                                     {
                                         context?.userData?.signUpWithGoogle === false &&
                                         <div className='col'>
@@ -318,7 +346,7 @@ const MyAccount = () => {
                                 <div className='flex items-center gap-4'>
                                     <Button type="submit"
 
-                                        className='btn-org btn-lg w-[250px]'>
+                                        className='btn-org btn-lg w-full md:w-[250px]'>
 
                                         {
                                             isLoading2 === true ? <CircularProgress color="inherit" />
@@ -333,6 +361,30 @@ const MyAccount = () => {
                     </Collapse>
 
 
+                    <div className='lg:hidden mt-5'>
+                        <div className='card bg-white !p-5 !shadow-md !rounded-md'>
+                            <div className='flex items-center !pb-3'>
+                                <h2 className='!pb-0'>Address</h2>
+                            </div>
+                            <hr />
+
+                            <div className='flex items-center justify-center !mt-4 !p-5 !border !border-dashed !border-[rgba(0,0,0,0.2)] !bg-[#f1faff] hover:bg-[#e7f3f9] cursor-pointer !rounded-md'
+                                onClick={() => context?.toggleAddressPanel(true)}
+                            >
+                                <span className='text-[14px] font-[500]'>Add Address</span>
+                            </div>
+
+                            <div className='flex gap-2 flex-col !mt-4'>
+                                {
+                                    context.address?.length > 0 && context.address?.map((address, index) => {
+                                        return (
+                                            <AddressBox key={index} address={address} removeAddress={removeAddress} editAddress={editAddress} />
+                                        )
+                                    })
+                                }
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>

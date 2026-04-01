@@ -6,13 +6,16 @@ import ProductItem from '../../components/ProductItem';
 import Pagination from '@mui/material/Pagination';
 import ProductItemListView from '../../components/ProductItemListView';
 import Button from '@mui/material/Button';
-import { IoGridSharp } from 'react-icons/io5';
+import { IoGridSharp, IoFilterSharp } from 'react-icons/io5';
 import { LuMenu } from 'react-icons/lu';
+import Drawer from '@mui/material/Drawer';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ProductLoading from '../../components/ProductLoading';
 import { fetchDataFromApi, postData } from '../../utils/api';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { MdCancel } from "react-icons/md";
+import Search from '../../components/Search';
 import { MyContext } from '../../App';
 
 
@@ -21,6 +24,7 @@ const SearchPage = () => {
     const navigate = useNavigate();
     const [isItemView, setIsItemView] = useState('grid');
     const [anchorEl, setAnchorEl] = useState(null);
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
     const open = Boolean(anchorEl);
     const [productsData, setProductsData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -114,8 +118,8 @@ const SearchPage = () => {
                 </Breadcrumbs>
             </div>
             <div className='w-full bg-white py-3 mt-4' style={{ padding: '15px' }}>
-                <div className='container flex gap-6'>
-                    <div className='sidebarWrapper w-[20%] '>
+                <div className='container flex flex-col lg:flex-row gap-4 lg:gap-6'>
+                    <div className='sidebarWrapper hidden lg:block w-[20%] '>
                         <SideBar
                             productsData={productsData}
                             setProductsData={setProductsData}
@@ -128,34 +132,45 @@ const SearchPage = () => {
                     </div>
 
 
-                    <div className='rightContent w-[80%] !py-3'>
-                        <div className='!w-full !mb-4 !rounded-xl flex items-center justify-between !p-3 sticky top-[80px] z-[50] shadow-sm border border-gray-100 bg-white/80 backdrop-blur-md transition-all' style={{ minHeight: '60px' }}>
-                            <div className='col1 flex items-center gap-2 itemViewActions'>
-                                <Button className={`!w-[50%] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] ${isItemView === "list" ? "bg-gray-100/80 active" : ""}`}
-                                    onClick={() => setIsItemView('list')}
-                                >
-                                    <LuMenu className='text-[rgbs(0,0,0,0.7)]' />
-                                </Button>
-                                <Button className={`!w-[50%] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] ${isItemView === "grid" ? "active" : ""}`}
-                                    onClick={() => setIsItemView('grid')}
-                                >
-                                    <IoGridSharp className='text-[rgbs(0,0,0,0.7)]' />
-                                </Button>
-                                <h6 className='whitespace-nowrap m-0 text-[14px] font-[400] text-[rgba(0,0,0,0.7)]'>There are {productsData?.length} products</h6>
-
+                    <div className='rightContent w-full lg:w-[80%] !py-3'>
+                        <div className='lg:hidden !mb-4 w-full'>
+                            <Search />
+                        </div>
+                        <div className='!w-full !mb-4 !rounded-xl flex flex-col sm:flex-row items-center justify-between !p-3 sticky top-[80px] z-[50] shadow-sm border border-gray-100 bg-white/80 backdrop-blur-md transition-all gap-4' style={{ minHeight: '60px' }}>
+                            <div className='col1 flex items-center gap-2 itemViewActions w-full sm:w-auto justify-between sm:justify-start'>
+                                <div className='flex items-center gap-2'>
+                                    {
+                                        context?.windowWidth < 992 && (
+                                            <Button className="!w-[40px] !h-[40px] !min-w-[40px] !rounded-full !text-[#000] lg:hidden bg-gray-100" onClick={() => setIsFilterOpen(true)}>
+                                                <IoFilterSharp className='text-[rgba(0,0,0,0.7)] text-[20px]' />
+                                            </Button>
+                                        )
+                                    }
+                                    <div className='flex items-center bg-gray-50 rounded-full p-1 border border-gray-100'>
+                                        <Button className={`!w-[40px] !h-[35px] !min-w-[40px] !rounded-full !text-[#000] ${isItemView === "list" ? "bg-white shadow-sm active" : ""}`}
+                                            onClick={() => setIsItemView('list')}
+                                        >
+                                            <LuMenu className='text-[rgba(0,0,0,0.7)]' />
+                                        </Button>
+                                        <Button className={`!w-[40px] !h-[35px] !min-w-[40px] !rounded-full !text-[#000] ${isItemView === "grid" ? "bg-white shadow-sm active" : ""}`}
+                                            onClick={() => setIsItemView('grid')}
+                                        >
+                                            <IoGridSharp className='text-[rgba(0,0,0,0.7)]' />
+                                        </Button>
+                                    </div>
+                                </div>
+                                <h6 className='whitespace-nowrap m-0 text-[13px] font-[400] text-gray-500'> {productsData?.length} products</h6>
                             </div>
 
-
-
-                            <div className='col2 ml-auto flex items-center justify-end gap-2'>
-                                <span className='whitespace-nowrap m-0 text-[14px] font-[400] text-[rgba(0,0,0,0.7)]'>Sort By</span>
+                            <div className='col2 w-full sm:w-auto flex items-center justify-between sm:justify-end gap-2 border-t sm:border-t-0 pt-3 sm:pt-0'>
+                                <span className='whitespace-nowrap m-0 text-[13px] font-[400] text-gray-400'>Sort By</span>
                                 <Button
                                     id="demo-positioned-button"
                                     aria-controls={open ? 'demo-positioned-menu' : undefined}
                                     aria-haspopup="true"
                                     aria-expanded={open ? 'true' : undefined}
                                     onClick={handleMenuClick}
-                                    className='!bg-white text-[14px] !text-[#000] !text-capitalise border border-[#000]'
+                                    className='!bg-gray-50 !text-[12px] !text-[#000] !text-capitalise border border-gray-200 !px-4 !rounded-full !h-[35px]'
                                 >
                                     {selectedSortVal}
                                 </Button>
@@ -189,7 +204,7 @@ const SearchPage = () => {
 
                         </div>
 
-                        <div className={`!py-6 grid ${isItemView === 'grid' ? '!grid-cols-5 !md:grid-cols-4 gap-4' :
+                        <div className={`!py-6 grid ${isItemView === 'grid' ? '!grid-cols-2 md:!grid-cols-3 lg:!grid-cols-4 gap-4' :
                             '!grid-cols-1 !md:grid-cols-1 !gap-2'}`}>
 
                             {
@@ -235,6 +250,35 @@ const SearchPage = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Mobile Filter Drawer */}
+            <Drawer
+                anchor="left"
+                open={isFilterOpen}
+                onClose={() => setIsFilterOpen(false)}
+                className="lg:hidden"
+                PaperProps={{
+                    sx: { width: '85%', maxWidth: '300px' }
+                }}
+            >
+                <div className="flex justify-between items-center !p-4 border-b border-gray-200">
+                    <h3 className="font-semibold text-lg !m-0">Filters</h3>
+                    <Button onClick={() => setIsFilterOpen(false)} className="!min-w-[40px] !w-[40px] !h-[40px] !rounded-full text-black">
+                        <MdCancel className='!text-black-500 !text-[30px] !m-0' />
+                    </Button>
+                </div>
+                <div className="!p-4 overflow-y-auto">
+                    <SideBar
+                        productsData={productsData}
+                        setProductsData={setProductsData}
+                        isLoading={isLoading}
+                        setIsLoading={setIsLoading}
+                        page={page}
+                        totalPages={totalPages}
+                        setTotalPages={setTotalPages}
+                    />
+                </div>
+            </Drawer>
         </section>
     )
 }

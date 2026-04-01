@@ -8,8 +8,9 @@ import CategoryPanel from './CategoryPanel';
 import "../Navigation/style.css";
 import { fetchDataFromApi } from "../../../utils/api"
 import { MyContext } from '../../../App';
+import MobileNav from './mobileNav.jsx';
 
-const Navigation = () => {
+const Navigation = (props) => {
 
     const [isOpenCatPanel, setIsOpenCatPanel] = React.useState(false);
     const [catData, setCatData] = useState([]);
@@ -19,26 +20,33 @@ const Navigation = () => {
         setCatData(context?.catData)
     }, [context?.catData])
 
+    useEffect(() => {
+        setIsOpenCatPanel(props?.isOpenCatPanel)
+    }, [props?.isOpenCatPanel])
+
     const openCategoryPanel = () => {
         setIsOpenCatPanel(true);
     }
 
     return (
         <>
-            <nav className="relative z-[100] bg-white">
-                <div className="container flex items-center justify-end gap-8">
-                    <div className="col_1 w-[25%] justify-start">
-                        <Button className='!text-black gap-2 w-full ' onClick={openCategoryPanel} >
-                            <RiMenu2Fill className='text-[18px]' />Shop by Categories
-                            <LiaAngleDownSolid className='text-[13px] ml-auto font-bold ' />
-                        </Button>
-                    </div>
+            <nav className="navigation relative z-[100] bg-white">
+                <div className="container flex items-center !justify-start lg:!justify-end gap-8">
+                    {
+                        context?.windowWidth > 992 &&
+                        <div className="col_1 w-[20%]">
+                            <Button className='!text-black gap-2 w-full ' onClick={openCategoryPanel} >
+                                <RiMenu2Fill className='text-[18px]' />Shop by Categories
+                                <LiaAngleDownSolid className='text-[13px] ml-auto font-bold ' />
+                            </Button>
+                        </div>
+                    }
 
-                    <div className="col_2 w-[60%] relative z-50">
-                        <ul className="flex items-center gap-3 justify-center nav relative z-50">
+                    <div className="col_2 w-full lg:w-[60%] relative z-50">
+                        <ul className="flex items-center gap-3 nav relative z-50">
                             <li className="list-none">
                                 <Link to="/" className="link transition !font-[500]">
-                                    <Button className='link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#ff5252] !py-4'>
+                                    <Button className='link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#ff5252] !py-1 lg:!py-4'>
                                         Home</Button>
                                 </Link>
                             </li>
@@ -49,7 +57,7 @@ const Navigation = () => {
                                     return (
                                         <li className="list-none relative group" key={index}>
                                             <Link to={`/products?catId=${cat?._id}`} className="link transition text-[14px] font-[500]">
-                                                <Button className='link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#ff5252]  !py-4'>
+                                                <Button className='link transition !font-[500] !text-[rgba(0,0,0,0.8)] hover:!text-[#ff5252] !py-1 lg:!py-4'>
                                                     {cat?.name}
                                                 </Button>
                                             </Link>
@@ -106,14 +114,13 @@ const Navigation = () => {
                         </ul>
                     </div>
 
-                    <div className="col_3 w-[20%] flex justify-end">
+                    <div className="col_3 w-[20%] flex justify-end !hidden lg:!block">
                         <p className='text-[10px] font-[500] flex items-center gap-2 mb-0 mt-0'>
                             <GoRocket />
                             Free International Delivery </p>
                     </div>
-
                 </div>
-            </nav >
+            </nav>
 
             {/* Control Panels components */}
             {
@@ -121,8 +128,13 @@ const Navigation = () => {
                 <CategoryPanel
                     isOpenCatPanel={isOpenCatPanel}
                     setIsOpenCatPanel={setIsOpenCatPanel}
+                    propsSetIsOpenCatPanel={props?.setIsOpenCatPanel}
                     data={catData}
                 />
+            }
+
+            {
+                context?.windowWidth <= 992 && <MobileNav />
             }
 
         </>

@@ -7,7 +7,6 @@ import { FaMinus, FaPlus, FaRegHeart, FaShoppingCart } from 'react-icons/fa';
 import { IoGitCompareOutline } from 'react-icons/io5';
 import { MdZoomOutMap } from 'react-icons/md';
 import { MyContext } from '../../App';
-import { InsertEmoticonSharp } from '@mui/icons-material';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { deleteData, editData, postData } from '../../utils/api.js';
@@ -210,7 +209,7 @@ const ProductItem = (props) => {
 
 
     return (
-        <div className='productItem '>
+        <div className='productItem w-full h-[50px] lg:!h-full lg:gap-0 gap-2'>
             <div className="productItem__imageWrapper">
                 <Link to={`/product/${props?.item?._id}`} className="productItem__imageLink">
                     <div className='productItem__imageContainer'>
@@ -284,7 +283,7 @@ const ProductItem = (props) => {
                     <Button className='productItem__actionBtn' title="Quick View" onClick={() => context.handleOpenProductDetailsModal(true, props?.item)}>
                         <MdZoomOutMap />
                     </Button>
-                    <Button className='productItem__actionBtn' title="Compare">
+                    <Button className='productItem__actionBtn' title="Compare" onClick={() => context.addToCompare(props?.item)}>
                         <IoGitCompareOutline />
                     </Button>
                     <Button className={`productItem__actionBtn `} title="Add to Wishlist"
@@ -296,7 +295,7 @@ const ProductItem = (props) => {
                 </div>
             </div>
             <div className='productItem__info'>
-                <h6 className='productItem__category !font-[400]'>
+                <h6 className='productItem__category !font-[400] !whitespace-nowrap'>
                     <span className='productItem__link'>
                         {props?.item?.brand}
                     </span>
@@ -309,7 +308,7 @@ const ProductItem = (props) => {
                 <div className='productItem__rating'>
                     <Rating name="size-small" defaultValue={props?.item?.rating} precision={0.5} size="small" readOnly />
                 </div>
-                <div className='productItem__priceWrapper'>
+                <div className='productItem__priceWrapper flex !text-start !flex-col lg:!flex-row'>
                     <span className='productItem__oldPrice'>
                         &#8377; {props?.item?.oldPrice}
                     </span>
@@ -322,12 +321,12 @@ const ProductItem = (props) => {
                 {
                     isAdded === false ? (
                         <Button
-                            className='btn-org btn-border !text-red !px-6 !py-2 btn-sm hover:!text-white rounded-full flex items-center gap-2 !mt-2 !w-full'
+                            className='btn-org !whitespace-nowrap btn-border !text-red !px-6 !py-2 btn-sm hover:!text-white rounded-full flex items-center gap-2 !mt-2 !w-full'
                             title="Add to Cart"
                             onClick={() => addToCart(props?.item, context?.userData?._id, quantity)}
                         >
-                            <FaShoppingCart className='text-sm' />
-                            <span className='text-[12px]'>Add to Cart</span>
+                            <FaShoppingCart className='text-[10px] lg:text-sm' />
+                            <span className='text-[10px] lg:text-sm'>Add to Cart</span>
                         </Button>
                     )
                         :
@@ -339,7 +338,7 @@ const ProductItem = (props) => {
                                         <CircularProgress />
                                     </Button>
                                     :
-                                    <div className='flex items-center justify-between overflow-hidden !rounded-full !border !border-[rgba(0,0,0,0.1)]'>
+                                    <div className='flex items-center justify-between overflow-hidden !rounded-full !border !border-[rgba(0,0,0,0.1)] !mt-3 lg:!mt-3'>
                                         <Button className='!min-w-[35px] !w-[35px] !h-[30px] !bg-[#f1f1f1] !rounded-none '
                                             onClick={subQty}
                                         >
