@@ -12,7 +12,7 @@ import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import CartPage from "./Pages/Cart";
 import Verify from "./Pages/Verify";
-import ForgotPassword from "./Pages/ForgotPassWord/index.jsx";
+import ForgotPassword from "./Pages/ForgotPassword/index.jsx";
 import toast, { Toaster } from 'react-hot-toast';
 import Checkout from "./Pages/Checkout";
 import MyAccount from "./Pages/MyAccount/index.jsx";

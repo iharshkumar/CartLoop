@@ -152,7 +152,7 @@ const Register = () => {
 
         <section className='section !py-10'>
             <div className='container'>
-                <div className='card !shadow-md !w-[400px] !m-auto !rounded-md !bg-white !p-4 !px-12'>
+                <div className='card !shadow-md !w-full max-w-[400px] !m-auto !rounded-md !bg-white !p-4 !px-6 md:!px-12'>
                     <h3 className='text-center text-[20px] text-black'>
                         Register with new Account
                     </h3>

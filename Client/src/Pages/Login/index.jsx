@@ -167,7 +167,7 @@ const Login = () => {
     return (
         <section className='section !py-10'>
             <div className='container'>
-                <div className='card !shadow-md !w-[400px] !m-auto !rounded-md !bg-white !p-4 !px-12'>
+                <div className='card !shadow-md !w-full max-w-[400px] !m-auto !rounded-md !bg-white !p-4 !px-6 md:!px-12'>
                     <h3 className='text-center text-[20px] text-black'> Login to your Account</h3>
                     <form className='w-full !mt-5' onSubmit={handleSubmit}>
                         <FormControl variant="standard" className='w-full !mt-4 relative !text-black'>
