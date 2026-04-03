@@ -24,7 +24,7 @@ const CategoryPanel = (props) => {
             </h3>
 
             {
-                props?.data?.length !== 0 && <CategoryCollapse data={props?.data} />
+                props?.data?.length !== 0 && <CategoryCollapse data={props?.data} closePanel={toggleDrawer(false)} />
             }
 
         </Box>

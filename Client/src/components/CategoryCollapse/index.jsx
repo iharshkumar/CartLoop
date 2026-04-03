@@ -9,7 +9,6 @@ import { FiMinusSquare } from 'react-icons/fi';
 export const CategoryCollapse = (props) => {
 
     const [submenuIndex, setSubmenuIndex] = useState(null);
-    // Track inner submenu per parent category to avoid "auto-open" when switching categories
     const [innerSubmenuIndex, setInnerSubmenuIndex] = useState({ parent: null, child: null });
 
 
@@ -42,7 +41,7 @@ export const CategoryCollapse = (props) => {
                             return (
                                 <li className="list-none" key={index}>
                                     <div className="flex items-center justify-between gap-2">
-                                        <Link to={`/products?catId=${cat?._id}`} className="flex-1">
+                                        <Link to={`/products?catId=${cat?._id}`} className="flex-1" onClick={props.closePanel}>
                                             <Button className="!px-1 !min-w-0 !text-left !justify-start !w-full !text-[rgba(0,0,0,2)]">
                                                 {cat?.name}
                                             </Button>
@@ -64,13 +63,13 @@ export const CategoryCollapse = (props) => {
 
                                     {/* FIRST SUBMENU → AUTO EXPAND */}
                                     {submenuIndex === index && (
-                                        <ul className="pl-4 mt-2 space-y-3">
+                                        <ul className="!pl-4 space-y-3">
                                             {
                                                 cat?.children?.length !== 0 && cat?.children?.map((subCat, index_) => {
                                                     return (
                                                         <li className="list-none relative" key={index_}>
                                                             <div className="flex items-center justify-between ">
-                                                                <Button className=" !px-1 !min-w-0 !text-left !text-[rgba(0,0,0,0.8)]">
+                                                                <Button className="!min-w-0 !text-left !text-[rgba(0,0,0,0.8)]">
                                                                     {subCat?.name}
                                                                 </Button>
 
@@ -83,12 +82,12 @@ export const CategoryCollapse = (props) => {
 
                                                             {/* INNER SUBMENU → AUTO EXPAND */}
                                                             {innerSubmenuIndex.parent === index && innerSubmenuIndex.child === index_ && (
-                                                                <ul className="pl-4 mt-2 translate-x-6 text-[15px] pb-3 mb-4">
+                                                                <ul className="!pl-4 text-[15px] !pb-3 ">
                                                                     {
                                                                         subCat?.children?.length !== 0 && subCat?.children?.map((thirdLevelCat, index__) => {
                                                                             return (
                                                                                 <li className='list-none relative !mb-1' key={index__}>
-                                                                                    <Link to={`/products?thirdLevelCatId=${thirdLevelCat?._id}`} className=" link w-full !text-left !justify-start !px-3 transition !text-[14px] block">
+                                                                                    <Link to={`/products?thirdLevelCatId=${thirdLevelCat?._id}`} className=" link w-full !text-left !justify-start !px-3 transition !text-[14px] block" onClick={props.closePanel}>
                                                                                         {thirdLevelCat?.name}
                                                                                     </Link>
                                                                                 </li>
