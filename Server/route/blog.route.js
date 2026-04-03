@@ -7,8 +7,8 @@ const blogRouter = Router();
 
 blogRouter.post('/uploadImages',auth,upload.array('images'),uploadImages);
 blogRouter.post('/add',auth,addBlog);
-blogRouter.get('/',auth,getBlogs);
-blogRouter.get('/:id',auth,getBlog);
+blogRouter.get('/', getBlogs);
+blogRouter.get('/:id', getBlog);
 blogRouter.delete('/:id',auth,deleteBlog);
 blogRouter.put('/:id',auth,updatedBlog);
 

@@ -92,11 +92,11 @@ export async function addBlog(request, response) {
 export async function getBlogs(request, response) {
     try {
         const page = parseInt(request.query.page) || 1;
-        const perPage = parseInt(request.query.perPage);
+        const perPage = parseInt(request.query.perPage) || 10;
         const totalPosts = await BlogModel.countDocuments();
-        const totalPages = Math.ceil(totalPosts / perPage)
+        const totalPages = Math.ceil(totalPosts / perPage) || 1;
 
-        if (page > totalPages) {
+        if (page > totalPages && totalPosts > 0) {
             return response.status(404).json({
                 message: "Page not found",
                 error: true,
@@ -105,9 +105,9 @@ export async function getBlogs(request, response) {
         }
 
         const blogs = await BlogModel.find()
-            .skip((page - 1) * perPage)
-            .limit(perPage)
-            .exec();;
+            .skip(Math.max(0, (page - 1) * perPage))
+            .limit(Math.max(1, perPage))
+            .exec();
 
         if (!blogs) {
             return response.status(400).json({

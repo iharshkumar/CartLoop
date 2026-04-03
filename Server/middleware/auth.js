@@ -31,7 +31,7 @@ const auth = async (request,response,next)=>{
     catch(error)
     {
         console.error('Auth middleware error:', error.message);
-        return response.status(500).json({
+        return response.status(401).json({
             message: error.message || "You have not login",
             error:true,
             success:false

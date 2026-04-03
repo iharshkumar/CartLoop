@@ -22,7 +22,7 @@ import { fetchDataFromApi, postData, editData } from "./utils/api.js";
 import Address from "./Pages/MyAccount/address.jsx";
 import OrderSuccess from "./Pages/Orders/success.jsx";
 import OrderFailed from "./Pages/Orders/failed.jsx";
-import { PayPalScriptProvider } from "@paypal/react-paypal-js" // ✅ Add this
+import { PayPalScriptProvider } from "@paypal/react-paypal-js"
 import SearchPage from "./Pages/Search/index.jsx";
 import CompareModal from "./components/CompareModal";
 

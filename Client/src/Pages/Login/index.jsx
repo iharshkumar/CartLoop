@@ -161,6 +161,8 @@ const Login = () => {
                 const errorMessage = error.message;
                 const email = error.customData.email;
                 const credential = GoogleAuthProvider.credentialFromError(error);
+                context.alertBox("error", errorMessage);
+                setIsLoading(false);
             });
     }
 
