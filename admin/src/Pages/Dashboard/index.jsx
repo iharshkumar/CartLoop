@@ -3,7 +3,7 @@ import DashboardBoxes from '../../Components/DashboardBoxes'
 import { FaPlus } from 'react-icons/fa6';
 import { Button, Checkbox } from '@mui/material'
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa'
-import Badge from '../../components/Badge'
+import Badge from '../../Components/Badge'
 import { Link } from 'react-router-dom';
 import { MdOutlineModeEdit } from "react-icons/md";
 import { FiEye } from "react-icons/fi";

@@ -1,7 +1,7 @@
 import { Button, TablePagination } from '@mui/material'
 import React, { useState } from 'react'
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa6'
-import Badge from '../../components/Badge';
+import Badge from '../../Components/Badge';
 import SearchBox from '../../Components/SearchBox';
 import { useEffect } from 'react';
 import { editData, fetchDataFromApi } from '../../utils/api';

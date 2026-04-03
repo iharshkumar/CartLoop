@@ -15,7 +15,7 @@ import { FaPhone } from "react-icons/fa6";
 import { CiCalendar } from "react-icons/ci";
 import { deleteData, deleteMultipleData, fetchDataFromApi } from '../../utils/api';
 import CircularProgress from '@mui/material/CircularProgress';
-import Badge from '../../components/Badge';
+import Badge from '../../Components/Badge';
 
 const columns =
     [
