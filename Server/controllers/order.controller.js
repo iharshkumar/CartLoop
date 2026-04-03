@@ -2,6 +2,7 @@ import OrderModel from "../models/order.model.js";
 import ProductModel from "../models/product.model.js";
 import UserModel from "../models/user.model.js";
 import paypal from "@paypal/checkout-server-sdk";
+import mongoose from "mongoose";
 
 export const createOrderCOntroller = async (request, response) => {
     try {
@@ -52,20 +53,34 @@ export const createOrderCOntroller = async (request, response) => {
 export async function getOrderDeatilsController(request, response) {
     try {
         const userId = request.userId
-        const { page, limit } = request.query;
+        const { page, limit, all } = request.query;
 
+        // 1. Fetch user to verify role
         const user = await UserModel.findById(userId);
 
-        const orderlist = await OrderModel.find().sort({ createdAt: -1 }).populate('delivery_address userId');
-        const total = await OrderModel.countDocuments(orderlist);
+        // 2. Determine filter: Default to self
+        let queryFilter = { userId: userId };
+
+        // 3. Segregation: Only allow "all" if user is ADMIN AND explicitly asks for it
+        if (user && user.role === "ADMIN" && all === "true") {
+            queryFilter = {};
+        }
+
+        // 4. Execute query with filter
+        const orderlist = await OrderModel.find(queryFilter)
+            .sort({ createdAt: -1 })
+            .populate('delivery_address userId');
+
+        const total = await OrderModel.countDocuments(queryFilter);
+
         return response.status(200).json({
             error: false,
             message: "Order details",
             data: orderlist,
             success: true,
             total: total,
-            page: parseInt(page),
-            totalPages: Math.ceil(total / parseInt(limit))
+            page: parseInt(page) || 1,
+            totalPages: Math.ceil(total / (parseInt(limit) || 10))
         });
     } catch (error) {
         return response.status(500).json({
@@ -180,7 +195,7 @@ export const captureOrderPaypalController = async (request, response) => {
         }
 
         const orderInfo = {
-            userId: request.body.userId,
+            userId: request.userId,
             products: request.body.products.map(p => ({
                 ...p,
                 subTotalAmt: p.subTotalAmt || p.subTotal || (p.price * p.quantity)

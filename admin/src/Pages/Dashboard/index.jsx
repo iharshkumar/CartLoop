@@ -167,14 +167,14 @@ const Dashboard = () => {
   ]);
 
   useEffect(() => {
-    fetchDataFromApi(`/api/order/order-list?page=${orderPage + 1}&limit=${orderRowsPerPage}`).then((res) => {
+    fetchDataFromApi(`/api/order/order-list?page=${orderPage + 1}&limit=${orderRowsPerPage}&all=true`).then((res) => {
       if (res?.error === false) {
         setOrders(res?.data)
         setOrdersData(res?.data)
         setTotalOrders(res?.total)
       }
     })
-    fetchDataFromApi(`/api/order/order-list`).then((res) => {
+    fetchDataFromApi(`/api/order/order-list?all=true`).then((res) => {
       if (res?.error === false) {
         setTotalOrdersData(res?.data)
       }
@@ -201,7 +201,7 @@ const Dashboard = () => {
       setOrdersData(filteredOrders)
     }
     else {
-      fetchDataFromApi(`/api/order/order-list?page=${orderPage + 1}&limit=${orderRowsPerPage}`).then((res) => {
+      fetchDataFromApi(`/api/order/order-list?page=${orderPage + 1}&limit=${orderRowsPerPage}&all=true`).then((res) => {
         if (res?.error === false) {
           setOrders(res?.data)
           setOrdersData(res?.data)
