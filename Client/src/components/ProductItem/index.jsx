@@ -217,11 +217,13 @@ const ProductItem = (props) => {
                             src={props?.item?.images[0]}
                             alt="Product"
                             className='productItem__image productItem__image--primary'
+                            loading="lazy"
                         />
                         <img
                             src={props?.item?.images[1]}
                             alt="Product alternate view"
                             className='!w-full productItem__image productItem__image--secondary'
+                            loading="lazy"
                         />
                     </div>
                 </Link>

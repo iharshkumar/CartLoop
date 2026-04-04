@@ -83,7 +83,7 @@ const Header = () => {
                                     </Link>
                                 </li>
                                 <li className="list-none">
-                                    <Link to="/Track-Your-Order"
+                                    <Link to="/track"
                                         className="lg:text-[13px] text-[11px] link font-[500] !whitespace-nowrap transition">
                                         Track Your Order
                                     </Link>

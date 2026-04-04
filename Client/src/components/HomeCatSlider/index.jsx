@@ -47,7 +47,9 @@ const HomeCatSlider = (props) => {
                   <Link to="/">
                     <div className='item !py-7 !px-3 bg-white rounded-sm text-center flex items-center justify-center flex-col  '>
                       <img src={cat?.images[0]}
-                        className='w-[40px] lg:w-[60px] transition-all' />
+                        className='w-[40px] lg:w-[60px] transition-all' 
+                        loading="lazy" 
+                      />
                       <h3 className='text-[12px] lg:text-[15px] font-[500] !mt-2'>
                         {cat?.name}
                       </h3>
