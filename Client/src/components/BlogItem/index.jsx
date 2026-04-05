@@ -15,8 +15,7 @@ const BlogItem = (props) => {
             <Link to={`/blog/${props?.item?._id}`} className='imgWrapper block w-full overflow-hidden rounded-[20px] cursor-pointer relative group'>
                 <img src={props?.item?.images[0]}
                     className='w-full h-[220px] object-cover transition-all duration-700 group-hover:scale-110 group-hover:rotate-1' alt='blog image' />
-                <span className='flex items-center justify-center text-white absolute bottom-[15px] 
-                right-[15px] z-50 bg-red-500/90 backdrop-blur-sm px-3 py-1 rounded-full text-[11px] font-[600] gap-1 shadow-lg'>
+                <span className='flex items-center justify-center text-white absolute bottom-[15px] right-[15px] z-50 bg-red-500/90 backdrop-blur-sm !px-3 !py-1 rounded-full text-[11px] font-[600] gap-1 shadow-lg'>
                     <IoMdTime className='text-[14px] ' /> {props?.item?.createdAt?.split("T")[0]}
                 </span>
             </Link>
