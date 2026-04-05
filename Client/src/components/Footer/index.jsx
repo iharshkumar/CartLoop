@@ -145,7 +145,7 @@ const Footer = () => {
             </footer>
 
 
-            <div className='bottomStrip border-t border-[rgba(0,0,0,0.05)] bg-gray-950 !py-5'>
+            <div className='bottomStrip border-t border-black/10 bg-white !py-5'>
                 <div className='container flex flex-col md:flex-row items-center justify-between gap-4'>
                     <ul className='flex items-center gap-2'>
                         {[
@@ -156,7 +156,7 @@ const Footer = () => {
                             { icon: <FaInstagram className='text-[16px]' /> },
                         ].map((item, i) => (
                             <li key={i} className='list-none'>
-                                <Link to="/" target="_blank" className='w-[34px] h-[34px] rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-white hover:border-red-500 hover:bg-red-500/10 transition-all'>
+                                <Link to="/" target="_blank" className='w-[34px] h-[34px] rounded-full border flex items-center justify-center hover:border-red-500 hover:bg-red-500/10 transition-all'>
                                     {item.icon}
                                 </Link>
                             </li>
@@ -274,7 +274,6 @@ const Footer = () => {
 
                     {context?.openProductDetailsModal?.item?.length !== 0 && (
                         <>
-                            {/* ── MOBILE layout ── */}
                             <Box
                                 sx={{
                                     display: { xs: 'flex', md: 'none' },

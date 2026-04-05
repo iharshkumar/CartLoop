@@ -139,7 +139,7 @@ export async function getBlog(request, response) {
         const blog = await BlogModel.findById(request.params.id)
 
         if (!blog) {
-            response.status(500).json({
+            return response.status(500).json({
                 message: "The Blog with the given ID was not found",
                 error: true,
                 success: false

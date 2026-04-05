@@ -49,19 +49,7 @@ const Header = () => {
 
     const logout = () => {
         setAnchorEl(null)
-        fetchDataFromApi(`/api/user/logout?token=${localStorage.getItem('accesstoken')}`,
-            { withCredentials: true }).then((res) => {
-                if (res?.error === false) {
-                    context.setIsLogin(false);
-                    localStorage.removeItem("accesstoken")
-                    localStorage.removeItem("refreshToken")
-                    context.setUserData(null);
-                    context.setCartData([]);
-                    context.setMyListData([]);
-                    history("/")
-                }
-            }
-            )
+        context.logout()
     }
 
     return (
@@ -71,7 +59,7 @@ const Header = () => {
                     <div className="flex items-center justify-between">
                         <div className="col1 w-[50%] hidden lg:block">
                             <p className="text-[12px] font-[500]">
-                                Free Shipping Over $100 & Free Returns
+                                Free Shipping Over &#8377;10000 & Free Returns
                             </p>
                         </div>
 

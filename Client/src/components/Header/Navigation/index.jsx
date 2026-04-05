@@ -50,8 +50,6 @@ const Navigation = (props) => {
                                         Home</Button>
                                 </Link>
                             </li>
-
-
                             {
                                 catData?.length !== 0 && catData?.map((cat, index) => {
                                     return (
