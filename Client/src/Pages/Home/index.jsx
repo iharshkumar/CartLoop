@@ -9,7 +9,7 @@ import ProductsSlider from '../../components/ProductsSlider';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Navigation } from 'swiper/modules';
+import { Navigation, Autoplay, Pagination } from 'swiper/modules';
 import BlogItem from '../../components/BlogItem';
 import HomeSliderV2 from '../../components/HomeSliderV2';
 import BannerBoxV2 from '../../components/bannerBoxV2';
@@ -288,7 +288,14 @@ const Home = () => {
               slidesPerView={4}
               spaceBetween={30}
               navigation={true}
-              modules={[Navigation]}
+              autoplay={{
+                delay: 2500,
+                disableOnInteraction: false,
+              }}
+              pagination={{
+                clickable: true,
+              }}
+              modules={[Navigation, Autoplay, Pagination]}
               className="blogSlider"
               breakpoints={{
                 320: { slidesPerView: 1, spaceBetween: 15 },

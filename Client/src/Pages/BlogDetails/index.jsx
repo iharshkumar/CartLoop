@@ -48,14 +48,6 @@ const BlogDetails = () => {
     return (
         <section className='!pt-10 !pb-20 w-full bg-[#f8fbff]'>
             <div className='container max-w-[1100px] mx-auto !px-4'>
-                <div className="flex flex-col items-center mb-10">
-                    <Breadcrumbs aria-label="breadcrumb" className='!mb-6'>
-                        <Link to="/" className='link text-[13px] font-[500] hover:text-[#ff5252] transition-colors'>Home</Link>
-                        <Link to="/" className='link text-[13px] font-[500] hover:text-[#ff5252] transition-colors'>Journal</Link>
-                        <span className='text-[13px] font-[600] text-gray-400 uppercase tracking-widest truncate max-w-[200px]'>{blogData?.title}</span>
-                    </Breadcrumbs>
-                </div>
-
                 {
                     blogData && (
                         <div className="featuredBlog !mb-24 animate-fade-in bg-white rounded-[32px] !p-8 md:!p-14 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] border border-gray-50">

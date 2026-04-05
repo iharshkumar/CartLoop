@@ -442,6 +442,21 @@ footer form input::placeholder {
   }
 }
 
+/* Custom styling for Swiper pagination dots */
+.blogSlider .swiper-pagination-bullet {
+  background: #ccc !important;
+  opacity: 0.7;
+}
+
+.blogSlider .swiper-pagination-bullet-active {
+  background: #ff5252 !important;
+  opacity: 1;
+}
+
+.blogSection .blogSlider {
+  padding-bottom: 50px !important;
+}
+
 
 .swiper-pagination-bullet-active {
   background: #ff5252 !important;
