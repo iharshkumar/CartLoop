@@ -30,7 +30,7 @@ const ProductsSlider = (props) => {
                 }}
             >
                 {
-                    props?.data?.map((item, index) => {
+                    props?.data?.slice().reverse().map((item, index) => {
                         return (
                             <SwiperSlide key={index}>
                                 <ProductItem item={item} />
