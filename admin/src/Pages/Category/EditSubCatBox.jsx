@@ -4,7 +4,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { MdOutlineModeEdit } from 'react-icons/md';
 import { MyContext } from '../../App';
-import { editData } from '../../utils/api';
+import { editData, deleteData } from '../../utils/api';
 import { FaRegTrashCan } from "react-icons/fa6";
 
 
@@ -63,17 +63,26 @@ const EditSubCatBox = (props) => {
   }
 
 
+  const deleteSubCat = (id) => {
+    if (window.confirm("Are you sure you want to delete this Category?")) {
+      deleteData(`/api/category/${id}`).then(() => {
+        context.alertBox("success", "Category deleted successfully");
+        context?.getCat();
+      })
+    }
+  }
+
+
 
   return (
-    <form className='w-[100] flex items-center gap-3 !p-0 !px-4' onSubmit={handleSubmit}>
+    <form className='w-full flex items-center gap-3 !p-0 !px-4' onSubmit={handleSubmit}>
       {
         editMode === true &&
         <>
-          <div className='flex items-center justify-between !py-2 gap-4 whitespace-nowrap overflow-x-scroll'>
+          <div className='w-full flex items-center justify-between !py-2 gap-4'>
             <div className='w-[180px] md:w-[150px]'>
               <Select
-                style={{ zoom: '75%' }}
-                className="w-full"
+                className="w-full !text-sm"
                 value={selectVal}
                 size="small"
                 onChange={handleChange}
@@ -103,25 +112,26 @@ const EditSubCatBox = (props) => {
 
             <input
               type='text'
-              className='w-[150px] md:w-full !h-[30px] !border !border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm !p-3 !text-sm'
+              className='flex-1 !h-[35px] !border !border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm !px-3 !text-sm'
               name="name"
               value={formFields?.name}
               onChange={onChangeInput} />
 
             <div className='flex items-center gap-2'>
               <Button size="small"
-                className='btn-sml'
+                className='btn-blue btn-sm !min-w-fit'
                 type='submit'
                 variant='contained'>
                 {
-                  isLoading === true ? <CircularProgress color="inherit" />
+                  isLoading === true ? <CircularProgress color="inherit" size={16} />
                     :
                     <>
-                      Edit
+                      Update
                     </>
                 }
               </Button>
               <Button size="small"
+                className='btn-sm !min-w-fit'
                 variant="outlined"
                 onClick={() => setEditMode(false)}>Cancel</Button>
             </div>
@@ -134,17 +144,16 @@ const EditSubCatBox = (props) => {
         <>
           <span className='font-[500] text-[14px]'>{props?.name}</span>
           <div className='flex items-center !ml-auto gap-2'>
-            <Button className='!min-w-[35px] !w-[35px] !h-[35px] !rounded-full !text-black'
+            <Button className='!min-w-[35px] !w-[35px] !h-[35px] !rounded-full !text-[#2c2c2c] hover:!bg-[#e1e1e1]'
               onClick={() => {
                 setEditMode(true);
                 setSelectVal(props.selectedCat);
               }}><MdOutlineModeEdit />
             </Button>
 
-            <Button className='!min-w-[35px] !w-[35px] !h-[35px] !rounded-full !text-black'
+            <Button className='!min-w-[35px] !w-[35px] !h-[35px] !rounded-full !text-[#d32f2f] hover:!bg-[#ffebee]'
               onClick={() => {
-                setEditMode(true);
-                setSelectVal(props.selectedCat);
+                deleteSubCat(props?.id);
               }}><FaRegTrashCan />
             </Button>
           </div>

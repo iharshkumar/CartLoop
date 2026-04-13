@@ -71,7 +71,7 @@ const SubCategoryList = () => {
                                                         {
                                                             firstLevelCat?.children?.map((subCat, index_) => {
                                                                 return (
-                                                                    <li className='w-full !py-1' key={index_}>
+                                                                    <li className='w-full !py-1 transition-all hover:bg-[#fafafa]' key={index_}>
                                                                         <EditSubCatBox
                                                                             name={subCat.name}
                                                                             id={subCat?._id}
@@ -88,7 +88,7 @@ const SubCategoryList = () => {
                                                                                         return (
                                                                                             <li
                                                                                                 key={index__}
-                                                                                                className='w-full !hover:bg-[#f1f1f1]'>
+                                                                                                className='w-full transition-all hover:bg-[#fafafa]'>
                                                                                                 <EditSubCatBox
                                                                                                     name={thirdLevel.name}
                                                                                                     catData={firstLevelCat?.children}
