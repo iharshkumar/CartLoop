@@ -79,8 +79,8 @@ const EditSubCatBox = (props) => {
       {
         editMode === true &&
         <>
-          <div className='w-full flex items-center justify-between !py-2 gap-4'>
-            <div className='w-[180px] md:w-[150px]'>
+          <div className='w-full flex flex-col md:flex-row items-start md:items-center justify-between !py-3 md:!py-2 gap-3 md:gap-4'>
+            <div className='w-full md:w-[150px]'>
               <Select
                 className="w-full !text-sm"
                 value={selectVal}
@@ -112,14 +112,14 @@ const EditSubCatBox = (props) => {
 
             <input
               type='text'
-              className='flex-1 !h-[35px] !border !border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm !px-3 !text-sm'
+              className='w-full md:flex-1 !h-[35px] !border !border-[rgba(0,0,0,0.2)] focus:outline-none focus:border-[rgba(0,0,0,0.4)] rounded-sm !px-3 !text-sm'
               name="name"
               value={formFields?.name}
               onChange={onChangeInput} />
 
-            <div className='flex items-center gap-2'>
+            <div className='flex flex-col md:flex-row items-center gap-2 w-full md:w-auto'>
               <Button size="small"
-                className='btn-blue btn-sm !min-w-fit'
+                className='btn-blue btn-sm w-full md:w-auto !min-w-fit !h-[35px]'
                 type='submit'
                 variant='contained'>
                 {
@@ -131,7 +131,7 @@ const EditSubCatBox = (props) => {
                 }
               </Button>
               <Button size="small"
-                className='btn-sm !min-w-fit'
+                className='btn-sm w-full md:w-auto !min-w-fit !h-[35px]'
                 variant="outlined"
                 onClick={() => setEditMode(false)}>Cancel</Button>
             </div>
