@@ -28,12 +28,15 @@ app.use(cors({
     origin: true,
     credentials: true,
 }));
-
+ 
 app.use(express.json())
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(helmet({
-    crossOriginResourcePolicy: false
+    crossOriginResourcePolicy: false,
+    crossOriginOpenerPolicy: false,
+    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: false,
 }))
 
 app.get("/", (request, response) => {
