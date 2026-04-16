@@ -69,9 +69,9 @@ export async function createProduct(request, response) {
         let product = new ProductModel({
             name: request.body.name,
             description: request.body.description,
-            images: imagesArr,
-            bannerImages: bannerImage,
-            bannerTitlename: request.body.bannerTitlename,
+            images: request.body.images?.length ? request.body.images : imagesArr,
+            bannerImages: request.body.bannerImages || [],
+            bannerTitlename: request.body.bannerTitlename || "none",
             isDisplayOnHomeBanner: request.body.isDisplayOnHomeBanner,
             brand: request.body.brand,
             price: request.body.price,
