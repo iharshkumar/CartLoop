@@ -20,7 +20,6 @@ import adsBannerV2Router from "./route/adsBannerV2.route.js";
 import blogRouter from "./route/blog.route.js";
 import orderRouter from "./route/order.route.js";
 import trackingRouter from "./route/tracking.route.js";
-import chatRouter from "./route/chat.route.js";
 
 const app = express();
 
@@ -61,7 +60,6 @@ app.use('/api/adsBannerV2', adsBannerV2Router);
 app.use('/api/blog', blogRouter);
 app.use('/api/order', orderRouter);
 app.use('/api/orders', trackingRouter);
-app.use('/api/chat', chatRouter);
 
 
 connectDB().then(() => {

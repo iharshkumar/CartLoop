@@ -12,7 +12,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google/generative-ai": "^0.21.0",
     "@paypal/checkout-server-sdk": "^1.0.3",
     "axios": "^1.13.6",
     "bcryptjs": "^3.0.3",
