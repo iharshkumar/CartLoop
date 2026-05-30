@@ -28,6 +28,7 @@ import CompareModal from "./components/CompareModal";
 import OrderTracker from "./Pages/OrderTracker/OrderTracker.jsx";
 import Blogs from "./Pages/Blogs/index.jsx";
 import BlogDetails from "./Pages/BlogDetails/index.jsx";
+import Chatbot from "./components/Chatbot/index.jsx";
 
 const alertBox = (type, msg) => {
   if (type === "success") {
@@ -350,6 +351,7 @@ function App() {
             </Routes>
             <Footer />
             <CompareModal />
+            <Chatbot />
           </MyContext.Provider>
         </BrowserRouter>
       </PayPalScriptProvider>
