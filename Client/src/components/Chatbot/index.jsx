@@ -14,7 +14,7 @@ if (mic) {
 const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
-        { text: "Hello! I am your ClassyShop AI assistant. How can I help you today? (नमस्ते! मैं आपकी कैसे मदद कर सकता हूँ?)", sender: "bot" }
+        { text: "Hello! I am your CARTLOOP AI assistant. How can I help you today? (नमस्ते! मैं आपकी कैसे मदद कर सकता हूँ?)", sender: "bot" }
     ]);
     const [inputValue, setInputValue] = useState('');
     const [isListening, setIsListening] = useState(false);
@@ -89,7 +89,7 @@ const Chatbot = () => {
             if (data.success) {
                 setMessages(prev => [...prev, { text: data.message, sender: "bot" }]);
             } else {
-                setMessages(prev => [...prev, { text: "Sorry, I am having trouble connecting to the store database.", sender: "bot" }]);
+                setMessages(prev => [...prev, { text: data.message || "Sorry, I am having trouble connecting to the store database.", sender: "bot" }]);
             }
         } catch (error) {
             console.error(error);
@@ -110,7 +110,7 @@ const Chatbot = () => {
             {isOpen ? (
                 <div className="chatbot-window">
                     <div className="chatbot-header">
-                        <span>ClassyShop AI</span>
+                        <span>CARTLOOP AI</span>
                         <FaTimes className="chatbot-close" onClick={() => setIsOpen(false)} />
                     </div>
                     <div className="chatbot-messages">
