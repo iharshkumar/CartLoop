@@ -15,7 +15,7 @@ import {
 import { MdError } from "react-icons/md";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE = (import.meta.env.VITE_API_URL || "http://localhost:8000").replace(/\/$/, "");
 const ORDERS_URL = `${API_BASE}/api/orders`;
 const PIPELINE_URL = `${API_BASE}/api/orders/pipeline`;
 const POLL_INTERVAL = 5000; // 5 seconds

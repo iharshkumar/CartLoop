@@ -55,7 +55,7 @@ function App() {
     return token !== undefined && token !== null && token !== "";
   })
   const [userData, setUserData] = useState(null)
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
   const [cartData, setCartData] = useState([]);
   const [myListData, setMyListData] = useState([]);
   const [catData, setCatData] = useState([]);

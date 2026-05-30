@@ -11,7 +11,7 @@ import { PayPalButtons } from "@paypal/react-paypal-js";
 
 const VITE_APP_RAZORPAY_KEY_ID = import.meta.env.VITE_APP_RAZORPAY_KEY_ID;
 const VITE_APP_RAZORPAY_KEY_SECRET = import.meta.env.VITE_APP_RAZORPAY_KEY_SECRET;
-const VITE_API_URL = import.meta.env.VITE_API_URL;
+const VITE_API_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
 
 const Checkout = () => {
     const context = useContext(MyContext);

@@ -31,14 +31,15 @@ const Orders = () => {
   useEffect(() => {
     const token = localStorage.getItem("accesstoken");
     const headers = { Authorization: `Bearer ${token}` };
+    const VITE_API_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, "");
 
     // Fetch Pipeline
-    fetch(`${import.meta.env.VITE_API_URL}/api/orders/pipeline`, { headers })
+    fetch(`${VITE_API_URL}/api/orders/pipeline`, { headers })
       .then(res => res.json())
       .then(res => res.success && setPipeline(res.data));
 
     // Fetch Orders
-    fetch(`${import.meta.env.VITE_API_URL}/api/orders`, { headers })
+    fetch(`${VITE_API_URL}/api/orders`, { headers })
       .then(res => res.json())
       .then((res) => {
         if (res?.success === true) {
